@@ -18,11 +18,11 @@ export default class DeleteAccountUseCase{
             throw new NotFoundError("No se pudo encontrar nadie: El usuario no existe");
         }
 
-        if(id != result.id.getValue()){
+        if(id != result.uuid.getValue()){
             throw new InvalidError("No tienes acturizacion para esta cuenta");
         }
 
-        await this.repository.deleteAccount(result.id.getValue())
+        await this.repository.deleteAccount(result.uuid.getValue())
 
         return {
             message: "Se a eliminado la cuenta correctamente te extrañaremos :>",

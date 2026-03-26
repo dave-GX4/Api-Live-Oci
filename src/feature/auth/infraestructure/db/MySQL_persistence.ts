@@ -16,7 +16,7 @@ export default class MySQLPersistence implements AuthRepository{
         const query = "INSERT INTO users (uuid, name, email, password) VALUES (?, ?, ?, ?)";
 
         const values = [
-            auth.id.getValue(),
+            auth.uuid.getValue(),
             auth.name,
             auth.email.getValue(),
             auth.password.getValue()
@@ -52,8 +52,8 @@ export default class MySQLPersistence implements AuthRepository{
             }
             
             const user: Auth = {
-                id: UUID.fromDatabase(row.id_user),
-                name: row.name_user,
+                uuid: UUID.fromDatabase(row.uuid),
+                name: row.name,
                 email: Email.fromDatabase(row.email),
                 password: Password.fromDatabase(row.password)
             };

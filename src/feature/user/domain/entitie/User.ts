@@ -3,7 +3,7 @@ import Password from "../../../../core/valueobjects/Password"
 import UUID from "../../../../core/valueobjects/UUID"
 
 export default interface User {
-    id: UUID
+    uuid: UUID
     name: string
     email: Email
     password: Password

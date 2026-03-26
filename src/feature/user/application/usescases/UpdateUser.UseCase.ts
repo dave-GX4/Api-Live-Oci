@@ -27,7 +27,7 @@ export default class UpdateUserUseCase{
 
         if (!user) throw new NotFoundError("No se encontro la información");
 
-        if(idValue != user.id){
+        if(idValue != user.uuid){
             throw new InvalidError("No tienes permisos para modificar estos datos")
         }
 

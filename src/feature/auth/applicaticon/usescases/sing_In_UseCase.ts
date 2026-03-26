@@ -24,7 +24,7 @@ export default class SingInUseCase {
         }
 
         return{
-            data: user.id.getValue(),
+            data: user.uuid.getValue(),
             message: "Se a verificado correctamente",
             status: true
         }

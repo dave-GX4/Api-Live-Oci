@@ -26,7 +26,7 @@ export default class SingUpUseCase{
         const passwordConvert = Password.convert(passwordHash)
 
         const newUser: Auth = {
-            id: uuidValue,
+            uuid: uuidValue,
             name: authRequest.name,
             email: emailValue,
             password: passwordConvert

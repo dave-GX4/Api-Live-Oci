@@ -87,7 +87,7 @@ export default class MySqlUserPersistence implements UserRepository{
             const row = rows[0];
 
             const user : User = {
-                id: UUID.fromDatabase(row.id),
+                uuid: UUID.fromDatabase(row.uuid),
                 name: row.name,
                 email: Email.fromDatabase(row.email),
                 password: Password.fromDatabase(row.password),
