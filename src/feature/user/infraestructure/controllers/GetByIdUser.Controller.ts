@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import GetByIdUserUseCase from "../../application/usescases/GetByIdUser.UseCase";
 import InvalidError from "../../../../core/errors/InvalidError";
-import { ExistsError } from "../../../../core/errors/ExistsError";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
+import { NotFoundError } from "../../../../core/errors/NotFoundError";
 
 export default class GetByIdUserController{
     constructor(
@@ -26,7 +26,7 @@ export default class GetByIdUserController{
                 )
             }
 
-            if (error instanceof ExistsError) {
+            if (error instanceof NotFoundError) {
                 return res.status(409).json(
                     { message: error.message }
                 )

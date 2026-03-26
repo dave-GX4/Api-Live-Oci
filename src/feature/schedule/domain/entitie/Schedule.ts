@@ -1,12 +1,12 @@
 import UUID from "../../../../core/valueobjects/UUID"
 
 export default interface Schedule{
-    id: UUID
-    id_user: UUID
+    uuid: UUID
+    uuidUser: UUID
     title: string
     days: number[]
-    start_time: string
-    end_time: string
+    startTime: string
+    endTime: string
     active: boolean
     type: string
 }

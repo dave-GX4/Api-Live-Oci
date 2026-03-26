@@ -11,15 +11,19 @@ export default class MySqlSchedulePersistence implements ScheduleRepository{
     ){}
 
     async addSchedule(schedule: Schedule): Promise<void> {
-        const query = "INSERT JOIN schedules (id, idUser, title, days, startTime, endTime, active, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        const query = `
+            INSERT INTO schedules 
+            (uuid, uuidUser, title, days, startTime, endTime, active, type) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
 
         const values = [
-            schedule.id.getValue(),
-            schedule.id_user.getValue(),
+            schedule.uuid.getValue(),
+            schedule.uuidUser.getValue(),
             schedule.title,
             JSON.stringify(schedule.days),
-            schedule.start_time,
-            schedule.end_time,
+            schedule.startTime,
+            schedule.endTime,
             schedule.active,
             schedule.type
         ];
@@ -27,25 +31,31 @@ export default class MySqlSchedulePersistence implements ScheduleRepository{
         try {
             await this.pool.execute(query, values);
         } catch (error) {
+            const mysqlError = error as { code?: string, message?: string };
+            
+            if (mysqlError.code === 'ER_NO_REFERENCED_ROW_2') {
+                throw new NotFoundError("Usuario", schedule.uuidUser.getValue(), "UUID");
+            }
+            
             const message = error instanceof Error ? error.message : 'Error desconocido';
-            throw new DatabaseOperationError(`Error al buscar el horario: ${message}`);
+            throw new DatabaseOperationError(`Error al crear el horario: ${message}`);
         }
     }
 
     async getAllSchedulesByUser(id_user: string): Promise<Schedule[]> {
-        const query = "SELECT * FROM schedules WHERE idUser = ?";
+        const query = "SELECT * FROM schedules WHERE uuidUser = ?";
         const values = [id_user];
 
         try {
             const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
             
             return rows.map(row => ({
-                id: UUID.fromDatabase(row.id),
-                id_user: UUID.fromDatabase(row.id_user),
+                uuid: UUID.fromDatabase(row.uuid),
+                uuidUser: UUID.fromDatabase(row.uuidUser),
                 title: row.title,
                 days: typeof row.days === 'string' ? JSON.parse(row.days) : row.days,
-                start_time: row.start_time,
-                end_time: row.end_time,
+                startTime: row.startTime,
+                endTime: row.endTime,
                 active: row.active,
                 type: row.type
             }));
@@ -56,8 +66,8 @@ export default class MySqlSchedulePersistence implements ScheduleRepository{
     }
 
     async getByIdSchedule(id: string): Promise<Schedule | null> {
-        const query = "SELECT * FROM schedules WHERE id = ?";
-        const values = id;
+        const query = "SELECT * FROM schedules WHERE uuid = ?";
+        const values = [id];
         
         try {
             const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
@@ -69,12 +79,12 @@ export default class MySqlSchedulePersistence implements ScheduleRepository{
             const row = rows[0];
 
             const schedule : Schedule = {
-                id: UUID.fromDatabase(row.id),
-                id_user: UUID.fromDatabase(row.id_user),
+                uuid: UUID.fromDatabase(row.uuid),
+                uuidUser: UUID.fromDatabase(row.uuidUser),
                 title: row.title,
                 days: typeof row.days === 'string' ? JSON.parse(row.days) : row.days,
-                start_time: row.start_time,
-                end_time: row.end_time,
+                startTime: row.startTime,
+                endTime: row.endTime,
                 active: row.active,
                 type: row.type
             }
@@ -87,7 +97,7 @@ export default class MySqlSchedulePersistence implements ScheduleRepository{
     }
 
     async deleteSchedule(id: string): Promise<void> {
-        const query = "DELETE FROM schedules WHERE id = ?"
+        const query = "DELETE FROM schedules WHERE uuid = ?"
         const values = [id];
 
         try {
@@ -107,8 +117,8 @@ export default class MySqlSchedulePersistence implements ScheduleRepository{
         updates: Partial<{ 
             title: string; 
             days: number[];
-            start_time: string; 
-            end_time: string;
+            startTime: string; 
+            endTime: string;
             active: boolean
         }>
     ): Promise<void> {
@@ -125,14 +135,14 @@ export default class MySqlSchedulePersistence implements ScheduleRepository{
             values.push(JSON.stringify(updates.days));
         }
 
-        if(updates.start_time !== undefined){
+        if(updates.startTime !== undefined){
             fields.push("startTime = ?");
-            values.push(updates.start_time);
+            values.push(updates.startTime);
         }
 
-        if(updates.end_time !== undefined){
+        if(updates.endTime !== undefined){
             fields.push("endTime = ?");
-            values.push(updates.end_time);
+            values.push(updates.endTime);
         }
 
         if(updates.active !== undefined){
@@ -142,7 +152,7 @@ export default class MySqlSchedulePersistence implements ScheduleRepository{
 
         if (fields.length === 0) return;
 
-        const query = `UPDATE schedules SET ${fields.join(", ")} WHERE id = ?`;
+        const query = `UPDATE schedules SET ${fields.join(", ")} WHERE uuid = ?`;
         values.push(id);
 
         try {

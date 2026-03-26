@@ -1,9 +1,9 @@
 export default interface GetResponseDto{
-    id: string
+    uuid: string
     name: string
     description: string
     type: string
     category: string
-    duration_minutes: number
-    social_type: string
+    durationMinutes: number
+    socialType: string
 }

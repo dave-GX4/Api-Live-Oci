@@ -1,21 +1,21 @@
 import AuthRepository from "../../domain/auth_repository";
 import Auth from "../../domain/entitie/auth";
 import SingUpRequest from "../dtos/singUp_Request";
-import EncryptService from "../service/encryptService";
+import EncryptService from "../../../../core/services/interface/encryptService";
 import UuidService from "../../../../core/services/interface/uuidService";
 import UUID from "../../../../core/valueobjects/UUID";
 import Email from "../../../../core/valueobjects/Email";
 import Password from "../../../../core/valueobjects/Password";
 import AuthResponse from "../dtos/Auth.Response";
 
-export default class SingUpUseCase{
+export default class SingUpUseCase {
     constructor(
         private readonly repository: AuthRepository,
         private readonly serviceUuid: UuidService,
         private readonly serviceEncrypt: EncryptService
-    ){}
+    ) { }
 
-    async run (authRequest: SingUpRequest): Promise<AuthResponse>{
+    async run(authRequest: SingUpRequest): Promise<AuthResponse> {
         const uuid = await this.serviceUuid.generate()
         const uuidValue = UUID.validate(uuid)
 
@@ -35,7 +35,7 @@ export default class SingUpUseCase{
 
         await this.repository.createUser(newUser)
 
-        return{
+        return {
             message: "Se a creado tu cuenta correctamente: " + newUser.name,
             status: true
         }

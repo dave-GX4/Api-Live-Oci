@@ -12,47 +12,70 @@ export default class CreateActivityUseCase{
     ){}
 
     async run(
-        id_user: string, 
+        uuidUser: string, 
         name: string, 
         description: string, 
         type: string, 
         category: string, 
-        duration_minutes: number, 
-        social_type: string
-    ): Promise<ActivityResponseDto>{
+        durationMinutes: number | string,
+        socialType: string
+    ): Promise<ActivityResponseDto> {
+        
+        if (!uuidUser || uuidUser.trim() === '') {
+            throw new InvalidError("El ID de usuario es requerido");
+        }
+        const userId = UUID.validate(uuidUser);
+
+        const isEmpty = (value: any): boolean => 
+            value === null || value === undefined || (typeof value === 'string' && value.trim() === '');
+        
+        if (isEmpty(name)) {
+            throw new InvalidError("El nombre es requerido");
+        }
+        if (isEmpty(description)) {
+            throw new InvalidError("La descripción es requerida");
+        }
+        if (isEmpty(type)) {
+            throw new InvalidError("El tipo es requerido");
+        }
+        if (isEmpty(category)) {
+            throw new InvalidError("La categoría es requerida");
+        }
+        if (isEmpty(socialType)) {
+            throw new InvalidError("El tipo social es requerido");
+        }
+
+        const duration = typeof durationMinutes === 'string' 
+            ? Number.parseInt(durationMinutes, 10) 
+            : durationMinutes;
+            
+        if (Number.isNaN(duration) || duration <= 0) {
+            throw new InvalidError("La duración debe ser un número positivo en minutos");
+        }
+
         const newId = await this.serviceUuid.generate();
         const newIdValue = UUID.validate(newId);
-        const userId = UUID.validate(id_user);
 
-        if(id_user == null || name == null 
-            || description == null 
-            || type == null || category == null 
-            || duration_minutes == null 
-            || social_type == null
-        ){
-            throw new InvalidError("Algun dato no esta completo o esta vacio")
-        }
-
-        const activity : Activity = {
-            id: newIdValue,
-            id_user: userId,
-            name: name,
-            description: description,
-            type: type,
-            category: category,
-            duration_minutes: duration_minutes,
-            social_type: social_type
-        }
+        const activity: Activity = {
+            uuid: newIdValue,
+            uuidUser: userId,
+            name: name.trim(),
+            description: description.trim(),
+            type: type.trim(),
+            category: category.trim(),
+            durationMinutes: duration,
+            socialType: socialType.trim()
+        };
         
-        await this.repository.createActivity(activity)
+        await this.repository.createActivity(activity);
 
-        return{
-            data:{
+        return {
+            data: {
                 id: newIdValue.getValue(),
-                id_user: userId.getValue()
-            } ,
-            message: "Se guardo la actividad correctamente",
-            status: 200
-        }
+                idUser: userId.getValue()
+            },
+            message: "Se guardó la actividad correctamente",
+            status: 201
+        };
     }
 } 

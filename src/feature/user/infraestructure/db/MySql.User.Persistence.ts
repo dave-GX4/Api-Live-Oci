@@ -17,11 +17,11 @@ export default class MySqlUserPersistence implements UserRepository{
         updates: Partial<{
             email: string;
             password: string;
-            notificactions: boolean;
-            interests: string;
-            topics: string;
+            notifications: boolean;
+            interests: string[];
+            topics: string[];
             description: string;
-            leisure_type: string | null;
+            leisureType: string | null;
         }>
     ): Promise<void> {
         const fields: string[] = [];
@@ -35,31 +35,31 @@ export default class MySqlUserPersistence implements UserRepository{
             fields.push("password = ?");
             values.push(updates.password);
         }
-        if (updates.notificactions !== undefined) {
-            fields.push("notificactions = ?");
-            values.push(updates.notificactions);
+        if (updates.notifications !== undefined) {
+            fields.push("notifications = ?");
+            values.push(updates.notifications);
         }
         if (updates.interests !== undefined) {
             fields.push("interests = ?");
-            values.push(updates.interests);
+            values.push(JSON.stringify(updates.interests));
         }
         if (updates.topics !== undefined) {
             fields.push("topics = ?");
-            values.push(updates.topics);
+            values.push(JSON.stringify(updates.topics));
         }
         if (updates.description !== undefined) {
             fields.push("description = ?");
             values.push(updates.description);
         }
 
-        if (updates.leisure_type !== undefined) {
+        if (updates.leisureType !== undefined) {
             fields.push("leisureType = ?");
-            values.push(updates.leisure_type);
+            values.push(updates.leisureType);
         }
 
         if (fields.length === 0) return;
 
-        const query = `UPDATE users SET ${fields.join(", ")} WHERE id = ?`;
+        const query = `UPDATE users SET ${fields.join(", ")} WHERE uuid = ?`;
         values.push(id);
 
         try {
@@ -75,8 +75,8 @@ export default class MySqlUserPersistence implements UserRepository{
     }
 
     async getByIdUser(id: string): Promise<User | null> {
-        const query = "SELECT * FROM users WHERE id = ?";
-        const values = id;
+        const query = "SELECT * FROM users WHERE uuid = ?";
+        const values = [id];
         try {
             const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
 
@@ -94,8 +94,8 @@ export default class MySqlUserPersistence implements UserRepository{
                 notifications: row.notifications,
                 interests: row.interests,
                 topics: row.topics,
-                description: row.realice,
-                leisure_type: row.leisure_type
+                description: row.description,
+                leisureType: row.leisureType
             }
 
             return user
@@ -106,7 +106,7 @@ export default class MySqlUserPersistence implements UserRepository{
     }
 
     async deleteAccount(id: string): Promise<void> {
-        const query = "DELETE FROM users WHERE id = ?"
+        const query = "DELETE FROM users WHERE uuid = ?"
         const values = [id];
         
         try {

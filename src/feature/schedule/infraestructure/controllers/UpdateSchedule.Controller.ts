@@ -4,51 +4,70 @@ import UpdateScheduleUseCase from "../../application/usescases/UpdateSchedule.Us
 import InvalidError from "../../../../core/errors/InvalidError";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
 
-export default class UpdateScheduleController{
+export default class UpdateScheduleController {
     constructor(
-        private readonly updateUseCase :   UpdateScheduleUseCase
-    ){}
+        private readonly updateUseCase: UpdateScheduleUseCase
+    ) {}
 
-    async run(req: Request, res: Response): Promise<Response>{
+    async run(req: Request, res: Response): Promise<Response> {
         try {
-            const {id} = req.params;
-            if (!id) {
-                throw new InvalidError("No se encontro ningun identificador");
+            const { id } = req.params;
+            
+            if (!id || typeof id !== 'string' || id.trim() === '') {
+                throw new InvalidError("No se encontró identificador del horario");
             }
 
-            const{
+            const {
                 title,
-                day,
-                start_time,
-                end_time,
+                days,
+                startTime,
+                endTime,
                 active
-            } = req.body
+            } = req.body;
 
-            const response = await this.updateUseCase.run(id as string, title, day, start_time, end_time, active);
+            const activeBool = active === 1 || active === '1' || active === true;
 
-            return res.status(200).json(response)
+            if (days !== undefined && !Array.isArray(days)) {
+                throw new InvalidError("days debe ser un array de números");
+            }
+
+            const response = await this.updateUseCase.run(
+                id,
+                title,
+                days,
+                startTime,
+                endTime,
+                activeBool
+            );
+
+            return res.status(200).json(response);
             
         } catch (error) {
-            if(error instanceof InvalidError) {
-                return res.status(400).json(
-                    { message: "Error de validacion: " + error.message }
-                )
+            if (error instanceof InvalidError) {
+                return res.status(400).json({
+                    status: false,
+                    message: "Error de validación: " + error.message
+                });
             }
 
             if (error instanceof NotFoundError) {
-                return res.status(409).json(
-                    { message: error.message }
-                )
+                return res.status(404).json({
+                    status: false,
+                    message: error.message
+                });
             }
 
             if (error instanceof DatabaseOperationError) {
-                return res.status(500).json(
-                    { message: error.message }
-                )
+                return res.status(500).json({
+                    status: false,
+                    message: error.message
+                });
             }
 
-            return res.status(500).json({ message: "Error en el servicio :< Intente más tarde o de nuevo." });
-
+            return res.status(500).json({
+                status: false,
+                message: "Error en el servicio. Intente más tarde."
+            });
         }
     }
 }

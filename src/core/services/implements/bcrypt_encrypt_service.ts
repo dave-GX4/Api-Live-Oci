@@ -1,5 +1,5 @@
 import { hash, compare } from "bcrypt";
-import EncryptService from "../../applicaticon/service/encryptService";
+import EncryptService from "../interface/encryptService";
 
 export default class BcryptEncryptService implements EncryptService {
 

@@ -11,5 +11,5 @@ export default interface User {
     interests: string[]
     topics: string[]
     description: string
-    leisure_type: string
+    leisureType: string
 }

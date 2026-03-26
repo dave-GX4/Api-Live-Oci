@@ -9,12 +9,12 @@ routerActivity.post(
 );
 
 routerActivity.get(
-    "/AllActivities",
+    "/AllActivities/:id",
     (req: Request, res: Response) => getAllController.run(req, res)
 );
 
 routerActivity.delete(
-    "/killActivity",
+    "/killActivity/:id",
     (req: Request, res: Response) => deleteController.run(req, res)
 );
 

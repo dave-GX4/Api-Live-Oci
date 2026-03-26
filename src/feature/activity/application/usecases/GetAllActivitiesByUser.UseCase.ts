@@ -7,19 +7,19 @@ export default class GetAllActivitiesByUserUseCase{
         private readonly repository : ActivitiesRepository
     ){}
 
-    async run(id_user: string): Promise<GetResponseDto[]> {
-        const userId = UUID.validate(id_user);
+    async run(idUser: string): Promise<GetResponseDto[]> {
+        const userId = UUID.validate(idUser);
 
         const results = await this.repository.getAllActivitiesByUser(userId.getValue());
 
         return results.map(result => ({
-            id: result.id.getValue(),
+            uuid: result.uuid.getValue(),
             name: result.name,
             description: result.description,
             type: result.type,
             category: result.category,
-            duration_minutes: result.duration_minutes,
-            social_type: result.social_type
+            durationMinutes: result.durationMinutes,
+            socialType: result.socialType
         }));
     }
 }

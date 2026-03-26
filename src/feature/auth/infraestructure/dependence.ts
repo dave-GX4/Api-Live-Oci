@@ -5,7 +5,7 @@ import SingUpUseCase from "../applicaticon/usescases/sing_up_UseCase";
 import SingInController from "./controllers/sing_In_Controller";
 import SingUpController from "./controllers/sing_Up_Controller";
 import MySQLPersistence from "./db/MySQL_persistence";
-import BcryptEncryptService from "./services/bcrypt_encrypt_service";
+import BcryptEncryptService from "../../../core/services/implements/bcrypt_encrypt_service";
 
 const mysqlPersistence = new MySQLPersistence(pool)
 const uuidService = new UuidService()

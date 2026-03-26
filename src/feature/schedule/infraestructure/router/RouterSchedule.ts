@@ -4,12 +4,12 @@ import { addController, deleteController, getAllController, getByIdController, u
 const routerSchedule = Router();
 
 routerSchedule.post(
-    "/add",
+    "/add/:id",
     (req: Request, res: Response) => addController.run(req, res)
 );
 
 routerSchedule.get(
-    "/schedule/:id",
+    "/get/:id",
     (req: Request, res: Response) => getByIdController.run(req, res)
 );
 

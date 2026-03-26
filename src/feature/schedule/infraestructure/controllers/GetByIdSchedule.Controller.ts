@@ -27,7 +27,7 @@ export default class GetByIdScheduleController{
             }
 
             if (error instanceof NotFoundError) {
-                return res.status(409).json(
+                return res.status(404).json(
                     { message: error.message }
                 )
             }

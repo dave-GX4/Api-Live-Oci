@@ -5,33 +5,53 @@ import Schedule from "../../domain/entitie/Schedule";
 import ScheduleRepository from "../../domain/Schedule.Repository";
 import ScheduleResponseDto from "../dto/ScheduleResponseDto";
 
-export default class AddScheduleUsesCase{
+export default class AddScheduleUsesCase {
     constructor(
-        private readonly repository : ScheduleRepository,
+        private readonly repository: ScheduleRepository,
         private readonly serviceUuid: UuidService
-    ){}
+    ) {}
 
     async run(
-        id_user: string,
+        idUser: string,
         title: string,
         days: number[],
-        start_time: string,
-        end_time: string,
+        startTime: string,
+        endTime: string,
         active: boolean,
         type: string
-    ):Promise<ScheduleResponseDto>{
+    ): Promise<ScheduleResponseDto> {
 
         enum TypeSchedule {
             WORK = "trabajo",
             CUSTOM = "personalizado"
         }
 
-        if (!id_user || !title || !start_time || !end_time || active === undefined || !type) {
-            throw new InvalidError("Algun dato no es proporcionado");
+        if (!idUser?.trim()) {
+            throw new InvalidError("El ID de usuario es requerido");
+        }
+        if (!title?.trim()) {
+            throw new InvalidError("El título es requerido");
+        }
+        if (!startTime?.trim()) {
+            throw new InvalidError("La hora de inicio es requerida");
+        }
+        if (!endTime?.trim()) {
+            throw new InvalidError("La hora de fin es requerida");
+        }
+        if (active === undefined) {
+            throw new InvalidError("El estado activo es requerido");
+        }
+        if (!type?.trim()) {
+            throw new InvalidError("El tipo es requerido");
         }
 
         if (!days || days.length === 0) {
             throw new InvalidError("Debe seleccionar al menos un día");
+        }
+
+        const validDays = days.every(d => Number.isInteger(d) && d >= 0 && d <= 6);
+        if (!validDays) {
+            throw new InvalidError("Los días deben ser números del 0 (domingo) al 6 (sábado)");
         }
 
         const validTypes = Object.values(TypeSchedule);
@@ -39,7 +59,7 @@ export default class AddScheduleUsesCase{
             throw new InvalidError(`El tipo debe ser uno de: ${validTypes.join(', ')}`);
         }
 
-        const userId = UUID.validate(id_user);
+        const userId = UUID.validate(idUser);
         const uuid = await this.serviceUuid.generate();
         const newid = UUID.validate(uuid);
 
@@ -56,22 +76,21 @@ export default class AddScheduleUsesCase{
         }
 
         const newSchedule: Schedule = {
-            id: newid,
-            id_user: userId,
-            title: title,
+            uuid: newid,
+            uuidUser: userId,
+            title: title.trim(),
             days: days,
-            start_time: start_time,
-            end_time: end_time,
+            startTime: startTime.trim(),
+            endTime: endTime.trim(),
             active: active,
             type: type as TypeSchedule
         };
 
-
         await this.repository.addSchedule(newSchedule);
         
-        return{
-            message: "El horario se creo con exito",
-            status: 200
-        }
+        return {
+            message: "El horario se creó con éxito",
+            status: 201,
+        };
     }
 }

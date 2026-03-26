@@ -17,14 +17,14 @@ export default class DeleteScheduleUseCase{
             throw new InvalidError("No se encontro ningun horario");
         }
 
-        if(id !== schedule.id.getValue()){
+        if(id !== schedule.uuid.getValue()){
             throw new InvalidError("El horario no corresponde");
         }
 
-        await this.repository.deleteSchedule(schedule.id.getValue());
+        await this.repository.deleteSchedule(schedule.uuid.getValue());
         
         return {
-            message: "",
+            message: "Se ha eliminado corectamente",
             status: 200
         }
     }

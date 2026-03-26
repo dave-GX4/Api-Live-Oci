@@ -1,9 +1,9 @@
 export default interface GetScheduleResponseDto{
-    id: string,
+    uuid: string,
     title: string
     days: number[],
-    start_time: string
-    end_time: string
+    startTime: string
+    endTime: string
     active: boolean
     type: string
 }

@@ -1,14 +1,14 @@
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
 import UUID from "../../../../core/valueobjects/UUID";
-import User from "../../domain/entitie/User";
 import UserRepository from "../../domain/User.Repository";
+import GetResponseUserDto from "../dto/GetResponseUserDto";
 
 export default class GetByIdUserUseCase{
     constructor(
         private readonly repository : UserRepository
     ){}
 
-    async run(id: string): Promise<User>{
+    async run(id: string): Promise<GetResponseUserDto>{
         const idValue = UUID.validate(id);
 
         const user = await this.repository.getByIdUser(idValue.getValue())
@@ -17,6 +17,14 @@ export default class GetByIdUserUseCase{
             throw new NotFoundError("La informacion no se encontro")
         }
 
-        return user;
+        return {
+            name: user.name,
+            email: user.email.getValue(),
+            notifications: !!user.notifications,
+            interests: user.interests,
+            topics: user.topics,
+            description: user.description,
+            leisureType: user.leisureType
+        };
     }
 }

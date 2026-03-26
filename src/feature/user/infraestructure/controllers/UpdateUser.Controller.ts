@@ -1,43 +1,50 @@
 import { Request, Response } from "express";
 import UpdateUserUseCase from "../../application/usescases/UpdateUser.UseCase";
 import InvalidError from "../../../../core/errors/InvalidError";
-import { ExistsError } from "../../../../core/errors/ExistsError";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
+import { NotFoundError } from "../../../../core/errors/NotFoundError";
 
 export default class UpdateUserController{
     constructor(
         private readonly updateUseCase : UpdateUserUseCase
     ){}
 
-    async run(req: Request, res: Response): Promise<Response>{
+    async run(req: Request, res: Response): Promise<Response> {
         try {
             const { id } = req.params;
             if (!id) {
-                throw new InvalidError("No se encontro ningun identificador")
+                throw new InvalidError("No se encontró ningún identificador");
             }
 
             const {
-                email, 
-                password, 
-                notificactions,
+                email,
+                password,
+                notifications,
                 interests,
                 topics,
                 description,
-                leisure_type
-            } = req.body
+                leisureType
+            } = req.body;
+
+            if (interests !== undefined && !Array.isArray(interests)) {
+                throw new InvalidError("interests debe ser un array");
+            }
+            if (topics !== undefined && !Array.isArray(topics)) {
+                throw new InvalidError("topics debe ser un array");
+            }
 
             const response = await this.updateUseCase.run(
                 id as string,
-                leisure_type,
+                leisureType,
                 email,
                 password,
-                notificactions,
+                notifications,
                 interests,
                 topics,
                 description,
-            )
+            );
 
-            return res.status(200).json(response)
+            return res.status(200).json(response);
         } catch (error) {
             if (error instanceof InvalidError) {
                 return res.status(400).json(
@@ -45,7 +52,7 @@ export default class UpdateUserController{
                 )
             }
 
-            if (error instanceof ExistsError) {
+            if (error instanceof NotFoundError) {
                 return res.status(409).json(
                     { message: error.message }
                 )

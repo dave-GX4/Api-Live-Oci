@@ -2,7 +2,7 @@ import Schedule from "./entitie/Schedule";
 
 export default interface ScheduleRepository{
     addSchedule(schedule: Schedule): Promise<void>
-    getAllSchedulesByUser(id_user: string): Promise<Schedule[]>
+    getAllSchedulesByUser(uuidUser: string): Promise<Schedule[]>
     getByIdSchedule(id: string): Promise<Schedule | null>
     deleteSchedule(id: string): Promise<void>
     updatenSchedule(
@@ -10,8 +10,8 @@ export default interface ScheduleRepository{
         updates: Partial<{
             title: string,
             days: number[],
-            start_time: string,
-            end_time: string,
+            startTime: string,
+            endTime: string,
             active: boolean
         }>
     ): Promise<void>

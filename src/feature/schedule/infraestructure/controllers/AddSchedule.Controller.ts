@@ -4,37 +4,57 @@ import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperatio
 import InvalidError from "../../../../core/errors/InvalidError";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
 
-export default class AddScheduleController{
+export default class AddScheduleController {
     constructor(
-        private readonly addUseCase : AddScheduleUsesCase
-    ){}
+        private readonly addUseCase: AddScheduleUsesCase
+    ) {}
 
-    async run(req: Request, res: Response): Promise<Response>{
+    async run(req: Request, res: Response): Promise<Response> {
         try {
-            const {id} = req.params;
+            const { id } = req.params;
+            
+            // ✅ Validación segura del ID
+            if (!id || typeof id !== 'string' || id.trim() === '') {
+                throw new InvalidError("No se encontró identificador de usuario");
+            }
 
             const {
                 title,
                 day,
-                start_time,
-                end_time,
+                startTime,
+                endTime,
                 active,
                 type
             } = req.body;
-            
-            const response = await this.addUseCase.run(id as string, title, day, start_time, end_time, active, type);
 
-            return res.status(200).json(response)
+            const days = Array.isArray(day) ? day : [day].filter(Boolean);
+            
+            const activeBool = typeof active === 'string'
+                ? active === 'true' 
+                : Boolean(active);
+
+            const response = await this.addUseCase.run(
+                id,
+                title,
+                days,
+                startTime,
+                endTime,
+                activeBool,
+                type
+            );
+
+            return res.status(201).json(response);
+            
         } catch (error) {
             if (error instanceof InvalidError) {
                 return res.status(400).json({
                     status: false,
-                    message: "Error de validacion: " + error.message
+                    message: "Error de validación: " + error.message
                 });
             }
 
             if (error instanceof NotFoundError) {
-                return res.status(409).json({
+                return res.status(404).json({
                     status: false, 
                     message: error.message 
                 });
@@ -47,7 +67,10 @@ export default class AddScheduleController{
                 });
             }
 
-            return res.status(500).json({ message: "Error en el servicio :< Intente más tarde o de nuevo." });
+            return res.status(500).json({ 
+                status: false,
+                message: "Error en el servicio. Intente más tarde." 
+            });
         }
     }
 }

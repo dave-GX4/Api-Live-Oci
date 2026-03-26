@@ -4,6 +4,7 @@ import Activity from "../../domain/entitie/Activity";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
 import UUID from "../../../../core/valueobjects/UUID";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
+import InvalidError from "../../../../core/errors/InvalidError";
 
 export default class MySqlActivityPersistence implements ActivitiesRepository{
     constructor(
@@ -11,43 +12,53 @@ export default class MySqlActivityPersistence implements ActivitiesRepository{
     ){}
     
     async createActivity(activity: Activity): Promise<void> {
-        const query = "INSERT INTO activities (id, idUser, name, description, type, category, durationMinutes, socialType) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        const query = `
+            INSERT INTO activities 
+            (uuid, uuidUser, name, description, type, category, durationMinutes, socialType) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `;
 
         const values = [
-            activity.id.getValue(),
-            activity.id_user.getValue(),
+            activity.uuid.getValue(),
+            activity.uuidUser.getValue(),
             activity.name,
             activity.description,
             activity.type,
             activity.category,
-            activity.duration_minutes,
-            activity.social_type
+            activity.durationMinutes,
+            activity.socialType
         ];
 
         try {
             await this.pool.execute(query, values);
         } catch (error) {
+            const mysqlError = error as { code?: string, message?: string };
+            
+            if (mysqlError.code === 'ER_NO_REFERENCED_ROW_2') {
+                throw new InvalidError("El usuario no existe");
+            }
+            
             const message = error instanceof Error ? error.message : 'Error desconocido';
-            throw new DatabaseOperationError(`Error al buscar la actividad: ${message}`);
+            throw new DatabaseOperationError(`Error al crear la actividad: ${message}`);
         }
     }
 
-    async getAllActivitiesByUser(id_user: string): Promise<Activity[]> {
-        const query = "SELECT * FROM activities WHERE idUser = ?";
-        const values = [id_user]
+    async getAllActivitiesByUser(idUser: string): Promise<Activity[]> {
+        const query = "SELECT * FROM activities WHERE uuidUser = ?";
+        const values = [idUser]
 
         try {
             const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
 
             return rows.map(row => ({
-                id: UUID.fromDatabase(row.id),
-                id_user: UUID.fromDatabase(row.id_user),
+                uuid: UUID.fromDatabase(row.uuid),
+                uuidUser: UUID.fromDatabase(row.uuidUser),
                 name: row.name,
                 description: row.description,
                 type: row.type,
                 category: row.category,
-                duration_minutes: row.duration_minutes,
-                social_type: row.social_type
+                durationMinutes: row.durationMinutes,
+                socialType: row.socialType
             }));
 
         } catch (error) {
@@ -57,8 +68,8 @@ export default class MySqlActivityPersistence implements ActivitiesRepository{
     }
 
     async getByIdActivity(id: string): Promise<Activity | null> {
-        const query = "SELECT * FROM activities WHERE id = ?";
-        const values = id;
+        const query = "SELECT * FROM activities WHERE uuid = ?";
+        const values = [id];
 
         try {
             const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
@@ -70,14 +81,14 @@ export default class MySqlActivityPersistence implements ActivitiesRepository{
             const row = rows[0];
 
             const activity : Activity = {
-                id: UUID.fromDatabase(row.id),
-                id_user: UUID.fromDatabase(row.id_user),
+                uuid: UUID.fromDatabase(row.uuid),
+                uuidUser: UUID.fromDatabase(row.uuidUser),
                 name: row.name,
                 description: row.description,
                 type: row.type,
                 category: row.category,
-                duration_minutes: row.duration_minutes,
-                social_type: row.social_type
+                durationMinutes: row.durationMinutes,
+                socialType: row.socialType
             }
 
             return activity
@@ -88,7 +99,7 @@ export default class MySqlActivityPersistence implements ActivitiesRepository{
     }
 
     async deleteActivity(id: string): Promise<void> {
-        const query = "DELETE FROM activities WHERE id = ?"
+        const query = "DELETE FROM activities WHERE uuid = ?"
         const values = [id];
 
         try {

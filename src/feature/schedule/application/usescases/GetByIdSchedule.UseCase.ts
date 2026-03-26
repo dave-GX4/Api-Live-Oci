@@ -1,4 +1,4 @@
-import InvalidError from "../../../../core/errors/InvalidError";
+import { NotFoundError } from "../../../../core/errors/NotFoundError";
 import UUID from "../../../../core/valueobjects/UUID";
 import ScheduleRepository from "../../domain/Schedule.Repository";
 import GetScheduleResponseDto from "../dto/GetScheduleResponseDto";
@@ -13,15 +13,15 @@ export default class GetByIdScheduleUseCase{
         
         const schedule = await this.repository.getByIdSchedule(idValue.getValue());
         if(!schedule){
-            throw new InvalidError("No se encontro el horario");
+            throw new NotFoundError("Horario", id, "UUID");
         } 
 
         const response : GetScheduleResponseDto = {
-            id: schedule.id.getValue(),
+            uuid: schedule.uuid.getValue(),
             title: schedule.title,
             days: schedule.days,
-            start_time: schedule.start_time,
-            end_time: schedule.end_time,
+            startTime: schedule.startTime,
+            endTime: schedule.endTime,
             active: schedule.active,
             type: schedule.type
         };

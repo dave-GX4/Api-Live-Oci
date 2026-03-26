@@ -7,17 +7,17 @@ export default class GetAllScheduleByUserUseCase{
         private readonly repository: ScheduleRepository
     ){}
 
-    async run(id_user: string): Promise<GetScheduleResponseDto[]>{
-        const userId = UUID.validate(id_user);
+    async run(idUser: string): Promise<GetScheduleResponseDto[]>{
+        const userId = UUID.validate(idUser);
 
         const results = await this.repository.getAllSchedulesByUser(userId.getValue());
 
         return results.map(result => ({
-            id: result.id.getValue(),
+            uuid: result.uuid.getValue(),
             title: result.title,
             days: result.days,
-            start_time: result.start_time,
-            end_time: result.end_time,
+            startTime: result.startTime,
+            endTime: result.endTime,
             active: result.active,
             type: result.type
         }));

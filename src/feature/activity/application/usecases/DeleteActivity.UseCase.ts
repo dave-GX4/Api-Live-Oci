@@ -18,7 +18,7 @@ export default class DeleteActivityUseCase{
             throw new NotFoundError("No existe la actividad");
         }
 
-        if(id !== activity.id.getValue()){
+        if(id !== activity.uuid.getValue()){
             throw new InvalidError("Error en la actividad")
         }
 
