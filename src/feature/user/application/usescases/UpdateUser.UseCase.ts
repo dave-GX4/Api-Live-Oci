@@ -45,7 +45,7 @@ export default class UpdateUserUseCase{
         await this.repository.updateUser(idValue.getValue(), updates);
 
         return{
-            message: "",
+            message: "Se actualizo conrrectamente tu(s) datos",
             status: 200
         }
     }
