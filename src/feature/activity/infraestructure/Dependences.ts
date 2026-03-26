@@ -1,0 +1,20 @@
+import pool from "../../../core/config/data_base_conection";
+import UuidService from "../../../core/services/implements/uuidService";
+import CreateActivityUseCase from "../application/usecases/CreateActivity.UseCases";
+import DeleteActivityUseCase from "../application/usecases/DeleteActivity.UseCase";
+import GetAllActivitiesByUserUseCase from "../application/usecases/GetAllActivitiesByUser.UseCase";
+import CreateActivityController from "./constrollers/CreateActivity.Controller";
+import DeleteActivityController from "./constrollers/DeleteActivity.Controller";
+import GetAllActivitiesByUserController from "./constrollers/GetAllActivitiesByUser.Controller";
+import MySqlActivityPersistence from "./db/MySql.Activity.Persistence";
+
+const mySqlActivityPersistence = new MySqlActivityPersistence(pool)
+const serviceUid = new UuidService()
+
+const createUseCase = new CreateActivityUseCase(mySqlActivityPersistence, serviceUid);
+const getAllUseCase = new GetAllActivitiesByUserUseCase(mySqlActivityPersistence);
+const deleteUseCase = new DeleteActivityUseCase(mySqlActivityPersistence);
+
+export const createController = new CreateActivityController(createUseCase);
+export const getAllController = new GetAllActivitiesByUserController(getAllUseCase);
+export const deleteController = new DeleteActivityController(deleteUseCase);
