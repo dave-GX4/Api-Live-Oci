@@ -1,5 +1,6 @@
 import pool from "../../../core/config/data_base_conection";
 import UuidService from "../../../core/services/implements/uuidService";
+import MySqlLeisureRecordPersistence from "../../leisurerecord/infraestructure/db/MySql.LeisureRecord.Persistence";
 import CreateActivityUseCase from "../application/usecases/CreateActivity.UseCases";
 import DeleteActivityUseCase from "../application/usecases/DeleteActivity.UseCase";
 import GetAllActivitiesByUserUseCase from "../application/usecases/GetAllActivitiesByUser.UseCase";
@@ -9,9 +10,10 @@ import GetAllActivitiesByUserController from "./constrollers/GetAllActivitiesByU
 import MySqlActivityPersistence from "./db/MySql.Activity.Persistence";
 
 const mySqlActivityPersistence = new MySqlActivityPersistence(pool)
+const mySqlLRPersistence = new MySqlLeisureRecordPersistence(pool)
 const serviceUid = new UuidService()
 
-const createUseCase = new CreateActivityUseCase(mySqlActivityPersistence, serviceUid);
+const createUseCase = new CreateActivityUseCase(mySqlActivityPersistence, mySqlLRPersistence, serviceUid);
 const getAllUseCase = new GetAllActivitiesByUserUseCase(mySqlActivityPersistence);
 const deleteUseCase = new DeleteActivityUseCase(mySqlActivityPersistence);
 

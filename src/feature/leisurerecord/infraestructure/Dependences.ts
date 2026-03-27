@@ -1,22 +1,22 @@
 import pool from "../../../core/config/data_base_conection";
-import UuidService from "../../../core/services/implements/uuidService";
+import MySqlActivityPersistence from "../../activity/infraestructure/db/MySql.Activity.Persistence";
 
-import AddLeisureRecordUseCase from "../application/usescases/AddLeisureRecord.UseCase";
 import DeleteLeisureRecordUseCase from "../application/usescases/DeleteLeisureRecord.UseCase";
 import GetAllLeisureRecordByUserUseCase from "../application/usescases/GetAllLeisureRecordByUser.UseCase";
+import UpdateLeisureRecordUseCase from "../application/usescases/UpdateLeisureRecord.UseCase";
 
-import AddLeisureRecordController from "./controllers/AddLeisureRecord.Controller";
 import DeleteLeisureRecordController from "./controllers/DeleteLeisureRecord.Controller";
 import GetAllLeisureRecordByUserController from "./controllers/GetAllLeisureRecordByUser.Controller";
+import UpdateLeisureRecordController from "./controllers/UpdateLeisureRecord.Controller";
 import MySqlLeisureRecordPersistence from "./db/MySql.LeisureRecord.Persistence";
 
 const mySqlLeisureRecordsPercistence = new MySqlLeisureRecordPersistence(pool);
-const serviceUuid = new UuidService();
+const mySqlActivityPersistence = new MySqlActivityPersistence(pool)
 
-const addUseCase = new AddLeisureRecordUseCase(mySqlLeisureRecordsPercistence, serviceUuid);
 const getAllUseCase = new GetAllLeisureRecordByUserUseCase(mySqlLeisureRecordsPercistence);
-const deleteUseCase = new DeleteLeisureRecordUseCase(mySqlLeisureRecordsPercistence);
+const deleteUseCase = new DeleteLeisureRecordUseCase(mySqlLeisureRecordsPercistence, mySqlActivityPersistence);
+const updateUseCase = new UpdateLeisureRecordUseCase(mySqlLeisureRecordsPercistence);
 
-export const addController = new AddLeisureRecordController(addUseCase);
 export const getAllController = new GetAllLeisureRecordByUserController(getAllUseCase);
 export const deleteController = new DeleteLeisureRecordController(deleteUseCase);
+export const updateController = new UpdateLeisureRecordController(updateUseCase);

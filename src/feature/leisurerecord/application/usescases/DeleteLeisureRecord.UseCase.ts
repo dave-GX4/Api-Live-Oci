@@ -1,29 +1,38 @@
-import InvalidError from "../../../../core/errors/InvalidError";
+import { NotFoundError } from "../../../../core/errors/NotFoundError";
 import UUID from "../../../../core/valueobjects/UUID";
+import ActivitiesRepository from "../../../activity/domain/Activities.Repository";
 import LeisureRecordRepository from "../../domain/LeisureRecord.Repository";
 import LeisureRecordResponseDto from "../dto/LeisureRecordResponseDto";
 
 export default class DeleteLeisureRecordUseCase{
     constructor(
-        private readonly repositroy : LeisureRecordRepository
+        private readonly leisureRepository: LeisureRecordRepository,
+        private readonly activityRepository: ActivitiesRepository
     ){}
 
-    async run(id: string): Promise<LeisureRecordResponseDto>{
-        const idValue = UUID.validate(id);
+    async run(uuidLeisureRecord: string): Promise<LeisureRecordResponseDto>{
+        const leisureId = UUID.validate(uuidLeisureRecord);
 
-        const result = await this.repositroy.getById(idValue.getValue());
-        if(!result){
-            throw new InvalidError("No se encontro ninguna actividad terminada")
-        }
-        if(idValue.getValue() !== result.id.getValue()){
-            throw new InvalidError("No se podra eliminar esta actividad")
+        const leisureRecord = await this.leisureRepository.getById(leisureId.getValue());
+        if (!leisureRecord) {
+            throw new NotFoundError("Registro de ocio", uuidLeisureRecord, "UUID");
         }
 
-        await this.repositroy.deleteActivityComplete(result.id.getValue());
+        const activity = await this.activityRepository.getByIdActivity(
+            leisureRecord.uuidActivity.getValue()
+        );
 
-        return{
-            message: "Se a modificado el estado, puedes volver a realizar la actividad",
+        if (!activity) {
+            throw new NotFoundError("Actividad", leisureRecord.uuidActivity.getValue(), "UUID");
+        }
+
+        await this.leisureRepository.deleteActivityComplete(leisureId.getValue());
+
+        await this.activityRepository.deleteActivity(activity.uuid.getValue());
+
+        return {
+            message: "Actividad y registro de ocio eliminados correctamente",
             status: 200
-        }
+        };
     }
 }

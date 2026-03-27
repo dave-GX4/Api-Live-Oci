@@ -1,6 +1,8 @@
 import InvalidError from "../../../../core/errors/InvalidError";
 import UuidService from "../../../../core/services/interface/uuidService";
 import UUID from "../../../../core/valueobjects/UUID";
+import LeisureRecord from "../../../leisurerecord/domain/entitie/LeisureRecord";
+import LeisureRecordRepository from "../../../leisurerecord/domain/LeisureRecord.Repository";
 import ActivitiesRepository from "../../domain/Activities.Repository";
 import Activity from "../../domain/entitie/Activity";
 import ActivityResponseDto from "../dto/ActivityResponseDto";
@@ -8,6 +10,7 @@ import ActivityResponseDto from "../dto/ActivityResponseDto";
 export default class CreateActivityUseCase{
     constructor(
         private readonly repository : ActivitiesRepository,
+        private readonly leisureRepository: LeisureRecordRepository,
         private readonly serviceUuid: UuidService
     ){}
 
@@ -20,11 +23,9 @@ export default class CreateActivityUseCase{
         durationMinutes: number | string,
         socialType: string
     ): Promise<ActivityResponseDto> {
-        
         if (!uuidUser || uuidUser.trim() === '') {
             throw new InvalidError("El ID de usuario es requerido");
         }
-        const userId = UUID.validate(uuidUser);
 
         const isEmpty = (value: any): boolean => 
             value === null || value === undefined || (typeof value === 'string' && value.trim() === '');
@@ -53,11 +54,12 @@ export default class CreateActivityUseCase{
             throw new InvalidError("La duración debe ser un número positivo en minutos");
         }
 
+        const userId = UUID.validate(uuidUser);
         const newId = await this.serviceUuid.generate();
-        const newIdValue = UUID.validate(newId);
+        const activityId = UUID.validate(newId);
 
         const activity: Activity = {
-            uuid: newIdValue,
+            uuid: activityId,
             uuidUser: userId,
             name: name.trim(),
             description: description.trim(),
@@ -69,12 +71,30 @@ export default class CreateActivityUseCase{
         
         await this.repository.createActivity(activity);
 
+        const leisureId = await this.serviceUuid.generate();
+        const leisureUUID = UUID.validate(leisureId);
+
+         const leisureRecord: LeisureRecord = {
+            uuid: leisureUUID,
+            uuidUser: userId,
+            uuidActivity: activityId,
+            scheduleDate: undefined,
+            startTime: '00:00',
+            endTime: '00:00',
+            durationMinutes: 0,
+            satisfaction: 0,
+            status: 'creado'
+        };
+
+        await this.leisureRepository.addActivity(leisureRecord);
+
         return {
             data: {
-                id: newIdValue.getValue(),
-                idUser: userId.getValue()
+                id: userId.getValue(),
+                idActivity: activityId.getValue(),
+                idLR: leisureUUID.getValue()
             },
-            message: "Se guardó la actividad correctamente",
+            message: "Actividad y registro de ocio creados correctamente",
             status: 201
         };
     }

@@ -1,12 +1,7 @@
 import { Request, Response, Router } from "express";
-import { addController, deleteController, getAllController } from "../Dependences";
+import { deleteController, getAllController, updateController } from "../Dependences";
 
 const routerLeisureRecords = Router();
-
-routerLeisureRecords.post(
-    "/addLeisureRecords",
-    (req: Request, res: Response) => addController.run(req, res)
-);
 
 routerLeisureRecords.get(
     "/allLeisureRecords/:id",
@@ -16,6 +11,11 @@ routerLeisureRecords.get(
 routerLeisureRecords.delete(
     "/deleteLeisureRecord/:id",
     (req: Request, res: Response) => deleteController.run(req, res)
+);
+
+routerLeisureRecords.patch(
+    "/update/:id",
+    (req: Request, res: Response) => updateController.run(req, res)
 );
 
 export default routerLeisureRecords;
