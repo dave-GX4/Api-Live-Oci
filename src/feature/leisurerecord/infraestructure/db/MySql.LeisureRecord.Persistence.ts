@@ -94,7 +94,7 @@ export default class MySqlLeisureRecordPersistence implements LeisureRecordRepos
     }
     
     async deleteActivityComplete(id: string): Promise<void> {
-        const query = "DELETE FROM leisureRecords WHERE id = ?";
+        const query = "DELETE FROM leisureRecords WHERE uuid = ?";
         const values = [id];
 
         try {
