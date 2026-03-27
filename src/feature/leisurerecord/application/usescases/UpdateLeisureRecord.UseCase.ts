@@ -1,4 +1,3 @@
-import InvalidError from "../../../../core/errors/InvalidError";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
 import UUID from "../../../../core/valueobjects/UUID";
 import LeisureRecordRepository from "../../domain/LeisureRecord.Repository";
@@ -11,7 +10,6 @@ export default class UpdateLeisureRecordUseCase {
 
     async run(
         uuidLeisureRecord: string,
-        uuidUser: string,
         updates: {
             scheduleDate?: Date;
             startTime?: string;
@@ -22,15 +20,10 @@ export default class UpdateLeisureRecordUseCase {
     ): Promise<LeisureRecordResponseDto> {
         
         const recordId = UUID.validate(uuidLeisureRecord);
-        const userId = UUID.validate(uuidUser);
 
         const record = await this.leisureRepository.getById(recordId.getValue());
         if (!record) {
             throw new NotFoundError("Registro de ocio", uuidLeisureRecord, "UUID");
-        }
-
-        if (record.uuidUser.getValue() !== userId.getValue()) {
-            throw new InvalidError("No tienes permisos para modificar este registro");
         }
 
         let duration = record.durationMinutes;

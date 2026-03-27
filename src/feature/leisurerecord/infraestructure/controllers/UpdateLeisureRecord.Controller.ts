@@ -12,7 +12,6 @@ export default class UpdateLeisureRecordController {
     async run(req: Request, res: Response): Promise<Response> {
         try {
             const { id } = req.params;
-            const { id: userId } = req.body;
             
             if (!id || typeof id !== 'string') {
                 throw new InvalidError("ID de registro no válido");
@@ -28,7 +27,6 @@ export default class UpdateLeisureRecordController {
 
             const response = await this.updateUseCase.run(
                 id,
-                userId,
                 {
                     scheduleDate: scheduleDate ? new Date(scheduleDate) : undefined,
                     startTime,
