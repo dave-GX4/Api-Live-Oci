@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.singInController = exports.singUpController = void 0;
+const data_base_conection_1 = __importDefault(require("../../../core/config/data_base_conection"));
+const uuidService_1 = __importDefault(require("../../../core/services/implements/uuidService"));
+const sing_In_UseCase_1 = __importDefault(require("../applicaticon/usescases/sing_In_UseCase"));
+const sing_up_UseCase_1 = __importDefault(require("../applicaticon/usescases/sing_up_UseCase"));
+const sing_In_Controller_1 = __importDefault(require("./controllers/sing_In_Controller"));
+const sing_Up_Controller_1 = __importDefault(require("./controllers/sing_Up_Controller"));
+const MySQL_persistence_1 = __importDefault(require("./db/MySQL_persistence"));
+const bcrypt_encrypt_service_1 = __importDefault(require("../../../core/services/implements/bcrypt_encrypt_service"));
+const mysqlPersistence = new MySQL_persistence_1.default(data_base_conection_1.default);
+const uuidService = new uuidService_1.default();
+const bcryptService = new bcrypt_encrypt_service_1.default();
+const singUpUseCase = new sing_up_UseCase_1.default(mysqlPersistence, uuidService, bcryptService);
+const singInUseCase = new sing_In_UseCase_1.default(mysqlPersistence, bcryptService);
+exports.singUpController = new sing_Up_Controller_1.default(singUpUseCase);
+exports.singInController = new sing_In_Controller_1.default(singInUseCase);

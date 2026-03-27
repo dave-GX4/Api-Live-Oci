@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const Dependences_1 = require("../Dependences");
+const routerSchedule = (0, express_1.Router)();
+routerSchedule.post("/add/:id", (req, res) => Dependences_1.addController.run(req, res));
+routerSchedule.get("/get/:id", (req, res) => Dependences_1.getByIdController.run(req, res));
+routerSchedule.get("/allSchedules/:id", (req, res) => Dependences_1.getAllController.run(req, res));
+routerSchedule.delete("/delete/:id", (req, res) => Dependences_1.deleteController.run(req, res));
+routerSchedule.patch("/update/:id", (req, res) => Dependences_1.updateController.run(req, res));
+exports.default = routerSchedule;
