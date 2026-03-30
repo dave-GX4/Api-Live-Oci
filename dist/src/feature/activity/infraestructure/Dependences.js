@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteController = exports.getAllController = exports.createController = void 0;
-const data_base_conection_1 = __importDefault(require("../../../core/config/data_base_conection"));
+const data_base_conection_1 = __importDefault(require("../../../core/config/data.base.conection"));
 const uuidService_1 = __importDefault(require("../../../core/services/implements/uuidService"));
 const MySql_LeisureRecord_Persistence_1 = __importDefault(require("../../leisurerecord/infraestructure/db/MySql.LeisureRecord.Persistence"));
 const CreateActivity_UseCases_1 = __importDefault(require("../application/usecases/CreateActivity.UseCases"));
@@ -18,8 +18,8 @@ const mySqlActivityPersistence = new MySql_Activity_Persistence_1.default(data_b
 const mySqlLRPersistence = new MySql_LeisureRecord_Persistence_1.default(data_base_conection_1.default);
 const serviceUid = new uuidService_1.default();
 const createUseCase = new CreateActivity_UseCases_1.default(mySqlActivityPersistence, mySqlLRPersistence, serviceUid);
-const getAllUseCase = new GetAllActivitiesByUser_UseCase_1.default(mySqlActivityPersistence);
 const deleteUseCase = new DeleteActivity_UseCase_1.default(mySqlActivityPersistence);
+const getAllUseCase = new GetAllActivitiesByUser_UseCase_1.default(mySqlActivityPersistence);
 exports.createController = new CreateActivity_Controller_1.default(createUseCase);
 exports.getAllController = new GetAllActivitiesByUser_Controller_1.default(getAllUseCase);
 exports.deleteController = new DeleteActivity_Controller_1.default(deleteUseCase);

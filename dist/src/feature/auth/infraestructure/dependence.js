@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.singInController = exports.singUpController = void 0;
-const data_base_conection_1 = __importDefault(require("../../../core/config/data_base_conection"));
+const data_base_conection_1 = __importDefault(require("../../../core/config/data.base.conection"));
 const uuidService_1 = __importDefault(require("../../../core/services/implements/uuidService"));
 const sing_In_UseCase_1 = __importDefault(require("../applicaticon/usescases/sing_In_UseCase"));
 const sing_up_UseCase_1 = __importDefault(require("../applicaticon/usescases/sing_up_UseCase"));

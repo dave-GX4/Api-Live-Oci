@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateController = exports.deleteController = exports.getByIdController = exports.getAllController = exports.addController = void 0;
-const data_base_conection_1 = __importDefault(require("../../../core/config/data_base_conection"));
+const data_base_conection_1 = __importDefault(require("../../../core/config/data.base.conection"));
 const uuidService_1 = __importDefault(require("../../../core/services/implements/uuidService"));
 const AddSchedule_UseCase_1 = __importDefault(require("../application/usescases/AddSchedule.UseCase"));
 const DeleteSchedule_UseCase_1 = __importDefault(require("../application/usescases/DeleteSchedule.UseCase"));

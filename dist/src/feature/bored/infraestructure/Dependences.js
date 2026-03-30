@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getFilterController = exports.getRandomController = exports.getKeyController = void 0;
+const env_config_1 = require("../../../core/config/env.config");
+const GetActivityByKey_UseCase_1 = __importDefault(require("../application/usescases/GetActivityByKey.UseCase"));
+const GetFilterActivity_UseCase_1 = __importDefault(require("../application/usescases/GetFilterActivity.UseCase"));
+const GetRandom_UseCase_1 = __importDefault(require("../application/usescases/GetRandom.UseCase"));
+const GetActivityByKeyController_1 = __importDefault(require("./controllers/GetActivityByKeyController"));
+const GetFilterActivity_Controller_1 = __importDefault(require("./controllers/GetFilterActivity.Controller"));
+const GetRandom_Controller_1 = __importDefault(require("./controllers/GetRandom.Controller"));
+const BoredApi_Service_1 = __importDefault(require("./external/BoredApi.Service"));
+const boredService = new BoredApi_Service_1.default(env_config_1.env.externalApis.bored);
+const getRandomUseCase = new GetRandom_UseCase_1.default(boredService);
+const getKeyUseCase = new GetActivityByKey_UseCase_1.default(boredService);
+const getFilterUseCase = new GetFilterActivity_UseCase_1.default(boredService);
+exports.getKeyController = new GetActivityByKeyController_1.default(getKeyUseCase);
+exports.getRandomController = new GetRandom_Controller_1.default(getRandomUseCase);
+exports.getFilterController = new GetFilterActivity_Controller_1.default(getFilterUseCase);

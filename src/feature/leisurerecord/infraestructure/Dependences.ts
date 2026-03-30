@@ -1,4 +1,4 @@
-import pool from "../../../core/config/data_base_conection";
+import pool from "../../../core/config/data.base.conection";
 import MySqlActivityPersistence from "../../activity/infraestructure/db/MySql.Activity.Persistence";
 
 import DeleteLeisureRecordUseCase from "../application/usescases/DeleteLeisureRecord.UseCase";

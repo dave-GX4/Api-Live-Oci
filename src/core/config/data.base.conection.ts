@@ -1,14 +1,12 @@
 import mysql from 'mysql2/promise';
-import dotenv from "dotenv";
-
-dotenv.config();
+import { env } from './env.config';
 
 const dbConfig = {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: Number.parseInt(process.env.DB_PORT || '3306'),
+    host: env.database.host,
+    user: env.database.user,
+    password: env.database.pass,
+    database: env.database.name,
+    port: env.database.port,
     waitForConnections: true,
     connectionLimit: 20,
     queueLimit: 0

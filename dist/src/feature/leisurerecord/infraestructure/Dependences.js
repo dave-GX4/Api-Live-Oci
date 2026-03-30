@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateController = exports.deleteController = exports.getAllController = void 0;
-const data_base_conection_1 = __importDefault(require("../../../core/config/data_base_conection"));
+const data_base_conection_1 = __importDefault(require("../../../core/config/data.base.conection"));
 const MySql_Activity_Persistence_1 = __importDefault(require("../../activity/infraestructure/db/MySql.Activity.Persistence"));
 const DeleteLeisureRecord_UseCase_1 = __importDefault(require("../application/usescases/DeleteLeisureRecord.UseCase"));
 const GetAllLeisureRecordByUser_UseCase_1 = __importDefault(require("../application/usescases/GetAllLeisureRecordByUser.UseCase"));

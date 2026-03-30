@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteController = exports.updateController = exports.getByIdController = void 0;
-const data_base_conection_1 = __importDefault(require("../../../core/config/data_base_conection"));
+const data_base_conection_1 = __importDefault(require("../../../core/config/data.base.conection"));
 const bcrypt_encrypt_service_1 = __importDefault(require("../../../core/services/implements/bcrypt_encrypt_service"));
 const DeleteAccount_UsesCase_1 = __importDefault(require("../application/usescases/DeleteAccount.UsesCase"));
 const GetByIdUser_UseCase_1 = __importDefault(require("../application/usescases/GetByIdUser.UseCase"));

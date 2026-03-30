@@ -1,4 +1,4 @@
-import pool from "../../../core/config/data_base_conection";
+import pool from "../../../core/config/data.base.conection";
 import UuidService from "../../../core/services/implements/uuidService";
 import SingInUseCase from "../applicaticon/usescases/sing_In_UseCase";
 import SingUpUseCase from "../applicaticon/usescases/sing_up_UseCase";
