@@ -2,8 +2,6 @@ import dotenv from "dotenv";
 import ConfigurationError from "../errors/ConfigurationError";
 import path from "node:path";
 
-dotenv.config();
-
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 }
