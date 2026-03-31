@@ -19,7 +19,6 @@ const getEnv = (key: string): string => {
 };
 
 console.log('[ENV DEBUG] NODE_ENV:', process.env.NODE_ENV);
-//console.log('[ENV DEBUG] DB_HOST existe?:', !!process.env.DB_HOST);
 console.log('[ENV DEBUG] Variables disponibles:', Object.keys(process.env).filter(k => k.includes('DB')));
 
 export const env = {
