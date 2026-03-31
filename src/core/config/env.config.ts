@@ -1,3 +1,7 @@
+console.log('>>> TODAS LAS VARIABLES DISPONIBLES:', Object.keys(process.env).sort());
+console.log('>>> VARIABLES QUE EMPIEZAN CON DB:', Object.keys(process.env).filter(k => k.startsWith('DB')));
+console.log('>>> RAILWAY_* VARIABLES:', Object.keys(process.env).filter(k => k.startsWith('RAILWAY')));
+
 import dotenv from "dotenv";
 import ConfigurationError from "../errors/ConfigurationError";
 import path from "node:path";
