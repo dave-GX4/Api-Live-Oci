@@ -1,21 +1,15 @@
 import dotenv from "dotenv";
 import ConfigurationError from "../errors/ConfigurationError";
-import path from "node:path";
 
-if (process.env.NODE_ENV !== 'production') {
-    dotenv.config({ path: path.resolve(process.cwd(), '.env') });
-}
+dotenv.config();
 
 const getEnv = (key: string): string => {
     const value = process.env[key];
-    if (!value || value.trim() === '') {
-        throw new ConfigurationError(`[FATAL] La variable de entorno ${key} no está definida o es inválida. Valor actual: ${value}`);
+    if (!value) {
+        throw new ConfigurationError(key);
     }
     return value;
 };
-
-console.log('[ENV DEBUG] NODE_ENV:', process.env.NODE_ENV);
-console.log('[ENV DEBUG] Variables disponibles:', Object.keys(process.env).filter(k => k.includes('DB')));
 
 export const env = {
     server: {
