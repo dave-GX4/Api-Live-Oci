@@ -1,3 +1,9 @@
+console.log('=== DEBUG Railway ENV ===');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('DB_HOST:', process.env.DB_HOST ? 'EXISTS (hidden)' : 'UNDEFINED');
+console.log('All Railway vars:', Object.keys(process.env).filter(k => !k.includes('PATH') && !k.includes('HOME')));
+console.log('=========================');
+
 import dotenv from "dotenv";
 import ConfigurationError from "../errors/ConfigurationError";
 
