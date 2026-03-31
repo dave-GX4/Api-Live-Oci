@@ -63,7 +63,7 @@ export default class GenerateActivityUseCase {
     }
 
     private convertToMinutes(durationStr: string): number {
-        const value = Number.parseInt(durationStr.match(/\d+/)?.[0] || "0", 10);
+        const value = Number.parseInt(new RegExp(/\d+/).exec(durationStr)?.[0] || "0", 10);
         const text = durationStr.toLowerCase();
         return (text.includes("hour") || text.includes("hora")) ? value * 60 : value;
     }
