@@ -1,7 +1,9 @@
 import dotenv from "dotenv";
 import ConfigurationError from "../errors/ConfigurationError";
 
-dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config();
+}
 
 const getEnv = (key: string): string => {
     const value = process.env[key];
