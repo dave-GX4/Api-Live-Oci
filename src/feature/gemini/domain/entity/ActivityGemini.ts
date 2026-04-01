@@ -1,7 +1,8 @@
 export default interface ActivityGemini{
     titulo: string
     descripcion: string
+    type: string
     categoria: string
-    duracion_estimada: string
+    duracionEstimada: number
     socialType: string
 }

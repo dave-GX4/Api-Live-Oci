@@ -89,11 +89,6 @@ export default class CreateActivityUseCase{
         await this.leisureRepository.addActivity(leisureRecord);
 
         return {
-            data: {
-                id: userId.getValue(),
-                idActivity: activityId.getValue(),
-                idLR: leisureUUID.getValue()
-            },
             message: "Actividad y registro de ocio creados correctamente",
             status: 201
         };

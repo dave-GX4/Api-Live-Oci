@@ -6,6 +6,7 @@ import UuidService from "../../../../core/services/implements/uuidService";
 import UUID from "../../../../core/valueobjects/UUID";
 import Activity from "../../../activity/domain/entitie/Activity";
 import LeisureRecord from "../../../leisurerecord/domain/entitie/LeisureRecord";
+import ActivityInputData from "../dtos/ActivityInputData";
 
 export default class GenerateActivityUseCase {
     constructor(
@@ -15,23 +16,26 @@ export default class GenerateActivityUseCase {
         private readonly serviceUuid: UuidService
     ) {}
 
-    async run(userIdStr: string, inputData: any): Promise<ActivityResponseDto> {
-
+    async run(
+        userIdStr: string, 
+        inputData: ActivityInputData
+    ): Promise<ActivityResponseDto> {
         const aiResponse = await this.externalGemini.generateCustomActivity(inputData);
-        console.log(aiResponse)
 
         const userId = UUID.validate(userIdStr);
         const activityId = UUID.validate(await this.serviceUuid.generate());
         const leisureId = UUID.validate(await this.serviceUuid.generate());
+
+        console.log(aiResponse)
 
         const activity: Activity = {
             uuid: activityId,
             uuidUser: userId,
             name: aiResponse.titulo.trim(),
             description: aiResponse.descripcion.trim(),
-            type: inputData.type_template || "generado",
+            type: aiResponse.type,
             category: aiResponse.categoria.trim(),
-            durationMinutes: this.convertToMinutes(aiResponse.duracion_estimada),
+            durationMinutes: aiResponse.duracionEstimada,
             socialType: aiResponse.socialType.trim()
         };
 
@@ -52,19 +56,8 @@ export default class GenerateActivityUseCase {
         await this.leisureRepository.addActivity(leisureRecord);
 
         return {
-            data: {
-                id: userId.getValue(),
-                idActivity: activityId.getValue(),
-                idLR: leisureId.getValue(),
-            },
             message: "Actividad generada por IA guardada correctamente",
             status: 201
         };
-    }
-
-    private convertToMinutes(durationStr: string): number {
-        const value = Number.parseInt(new RegExp(/\d+/).exec(durationStr)?.[0] || "0", 10);
-        const text = durationStr.toLowerCase();
-        return (text.includes("hour") || text.includes("hora")) ? value * 60 : value;
     }
 }
