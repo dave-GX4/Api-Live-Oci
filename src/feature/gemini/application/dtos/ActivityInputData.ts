@@ -7,6 +7,6 @@ export default interface ActivityInputData {
     activityTemplate: string;
     typeTemplate: string;
     participantsTemplate: number;
-    durationtemplate: string;
-    kidFriendlytemplate: boolean;
+    durationTemplate: string;
+    kidFriendlyTemplate: boolean;
 }
