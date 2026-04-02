@@ -1,12 +1,7 @@
 export default interface ActivityInputData {
-    name: string;
-    interests: string[] | string;
-    topics: string[] | string;
-    description: string;
-    leisureType: string;
-    activityTemplate: string;
-    typeTemplate: string;
-    participantsTemplate: number;
-    durationTemplate: string;
-    kidFriendlyTemplate: boolean;
+    activity: string;
+    type: string;
+    participants: number;
+    duration: string;
+    kidFriendly: boolean;
 }
