@@ -18,6 +18,7 @@ export default class GetByIdUserUseCase{
         }
 
         return {
+            id: user.uuid.getValue(),
             name: user.name,
             email: user.email.getValue(),
             notifications: !!user.notifications,

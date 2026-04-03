@@ -1,4 +1,5 @@
 export default interface GetResponseUserDto {
+    id: string; 
     name: string;
     email: string;
     notifications: boolean;
