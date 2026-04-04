@@ -67,7 +67,7 @@ export default class UpdateUserUseCase{
 
         return {
             message: "Se actualizaron correctamente tu(s) datos",
-            status: 200
+            status: true
         };
     }
 }

@@ -26,7 +26,7 @@ export default class DeleteAccountUseCase{
 
         return {
             message: "Se a eliminado la cuenta correctamente te extrañaremos :>",
-            status: 200
+            status: true
         }
     }
 }
