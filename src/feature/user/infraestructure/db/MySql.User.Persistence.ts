@@ -15,6 +15,7 @@ export default class MySqlUserPersistence implements UserRepository{
     async updateUser(
         id: string, 
         updates: Partial<{
+            name: string;
             email: string;
             password: string;
             notifications: boolean;
@@ -27,6 +28,10 @@ export default class MySqlUserPersistence implements UserRepository{
         const fields: string[] = [];
         const values: any[] = [];
 
+        if(updates.name !== undefined){
+            fields.push("name = ?");
+            values.push(updates.name)
+        }
         if (updates.email !== undefined) {
             fields.push("email = ?");
             values.push(updates.email);

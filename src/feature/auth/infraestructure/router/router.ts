@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { singInController, singUpController } from "../dependence";
+import { singInController, singUpController } from "../Dependence.Auth";
 
 const routerAuth = Router();
 

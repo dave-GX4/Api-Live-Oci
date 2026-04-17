@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import SingUpUseCase from "../../applicaticon/usescases/sing_up_UseCase";
+import SingUpUseCase from "../../applicaticon/usescases/Sing.Up.UseCase";
 import InvalidError from "../../../../core/errors/InvalidError";
 import { ExistsError } from "../../../../core/errors/ExistsError";
 

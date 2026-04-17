@@ -1,10 +1,10 @@
 import pool from "../../../core/config/data.base.conection";
 import UuidService from "../../../core/services/implements/uuidService";
-import SingInUseCase from "../applicaticon/usescases/sing_In_UseCase";
-import SingUpUseCase from "../applicaticon/usescases/sing_up_UseCase";
-import SingInController from "./controllers/sing_In_Controller";
-import SingUpController from "./controllers/sing_Up_Controller";
-import MySQLPersistence from "./db/MySQL_persistence";
+import SingInUseCase from "../applicaticon/usescases/Sing.In.UseCase";
+import SingUpUseCase from "../applicaticon/usescases/Sing.Up.UseCase";
+import SingInController from "./controllers/Sing.In.Controller";
+import SingUpController from "./controllers/Sing.Up.Controller";
+import MySQLPersistence from "./db/MySQL.persistence.Auth";
 import BcryptEncryptService from "../../../core/services/implements/bcrypt_encrypt_service";
 
 const mysqlPersistence = new MySQLPersistence(pool)

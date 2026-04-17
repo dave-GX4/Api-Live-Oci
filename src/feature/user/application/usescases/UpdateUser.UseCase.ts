@@ -15,13 +15,14 @@ export default class UpdateUserUseCase{
 
     async run(
         id: string,
-        leisureType?: string,
+        name?: string,
         email?: string,
         password?: string,
         notifications?: boolean,
         interests?: string[],
         topics?: string[],
         description?: string,
+        leisureType?: string,
     ): Promise<UserResponseDTO> {
         const idValue = UUID.validate(id);
 
@@ -36,7 +37,10 @@ export default class UpdateUserUseCase{
         }
 
         const updates: any = {};
-
+        
+        if(name !== undefined && leisureType !== user.name){
+            updates.name = name;
+        }
         if (leisureType !== undefined && leisureType !== user.leisureType) {
             updates.leisureType = leisureType;
         }
