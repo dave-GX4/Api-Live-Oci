@@ -23,6 +23,7 @@ export default class AddScheduleUsesCase {
 
         enum TypeSchedule {
             WORK = "trabajo",
+            SCHOOL = "escuela",
             CUSTOM = "personalizado"
         }
 
@@ -63,15 +64,16 @@ export default class AddScheduleUsesCase {
         const uuid = await this.serviceUuid.generate();
         const newid = UUID.validate(uuid);
 
-        if (type === TypeSchedule.WORK) {
+        if (type === TypeSchedule.WORK || type === TypeSchedule.SCHOOL) {
             const existingSchedules = await this.repository.getAllSchedulesByUser(userId.getValue());
             
-            const hasWorkSchedule = existingSchedules.some(schedule => 
-                schedule.type === TypeSchedule.WORK
+            const hasExistingSchedule = existingSchedules.some(schedule => 
+                schedule.type === type
             );
 
-            if (hasWorkSchedule) {
-                throw new InvalidError("El usuario ya tiene un horario de trabajo registrado");
+            if (hasExistingSchedule) {
+                const nombreTipo = type === TypeSchedule.WORK ? "trabajo" : "escuela";
+                throw new InvalidError(`El usuario ya tiene un horario de ${nombreTipo} registrado.`);
             }
         }
 
