@@ -13,7 +13,6 @@ export default class AddScheduleController {
         try {
             const { id } = req.params;
             
-            // ✅ Validación segura del ID
             if (!id || typeof id !== 'string' || id.trim() === '') {
                 throw new InvalidError("No se encontró identificador de usuario");
             }
