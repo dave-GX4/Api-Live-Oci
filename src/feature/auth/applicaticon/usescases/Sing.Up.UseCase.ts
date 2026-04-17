@@ -31,7 +31,6 @@ export default class SingUpUseCase {
             email: emailValue,
             password: passwordConvert
         }
-        console.log(newUser)
 
         await this.repository.createUser(newUser)
 

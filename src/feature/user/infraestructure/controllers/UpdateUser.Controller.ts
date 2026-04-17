@@ -17,6 +17,7 @@ export default class UpdateUserController{
             }
 
             const {
+                name,
                 email,
                 password,
                 notifications,
@@ -35,13 +36,14 @@ export default class UpdateUserController{
 
             const response = await this.updateUseCase.run(
                 id as string,
-                leisureType,
+                name,
                 email,
                 password,
                 notifications,
                 interests,
                 topics,
                 description,
+                leisureType
             );
 
             return res.status(200).json(response);
