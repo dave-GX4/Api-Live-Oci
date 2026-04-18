@@ -22,7 +22,7 @@ export default class GetByIdScheduleUseCase{
             days: schedule.days,
             startTime: schedule.startTime,
             endTime: schedule.endTime,
-            active: schedule.active,
+            active: Boolean(schedule.active),
             type: schedule.type
         };
 
