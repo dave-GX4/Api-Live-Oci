@@ -18,7 +18,7 @@ export default class GetAllScheduleByUserUseCase{
             days: result.days,
             startTime: result.startTime,
             endTime: result.endTime,
-            active: result.active,
+            active: Boolean(result.active),
             type: result.type
         }));
     }
