@@ -2,7 +2,7 @@ import { env } from "../../../core/config/env.config";
 import GetActivityByKeyUseCase from "../application/usescases/GetActivityByKey.UseCase";
 import GetFilterActivityUseCase from "../application/usescases/GetFilterActivity.UseCase";
 import GetRandomUseCase from "../application/usescases/GetRandom.UseCase";
-import GetActivityByKeyController from "./controllers/GetActivityByKeyController";
+import GetActivityByKeyController from "./controllers/GetActivityByKey.Controller";
 import GetFilterActivityController from "./controllers/GetFilterActivity.Controller";
 import GetRandomController from "./controllers/GetRandom.Controller";
 import BoredService from "./external/BoredApi.Service";

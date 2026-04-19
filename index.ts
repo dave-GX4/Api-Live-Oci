@@ -8,6 +8,7 @@ import routerLeisureRecords from "./src/feature/leisurerecord/infraestructure/ro
 import routerGemini from "./src/feature/gemini/infraestructure/routes/GeminiRouter";
 import routerBored from './src/feature/bored/infraestructure/routes/BoredRouter';
 import { env } from './src/core/config/env.config';
+import routerCloudinary from './src/feature/cloudinary/infraestructure/router/Cloudinary.Routes';
 
 const app = express();
 
@@ -15,16 +16,20 @@ const corsOptions = {
     origin: '*',
     methods: ['POST'],
 }
+
+const routeGlobal = "/api/v2/";
+
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use('/api/v1/auth', routerAuth);
-app.use('/api/v1/user', routerUser);
-app.use('/api/v1/activities', routerActivity);
-app.use('/api/v1/schedules', routerSchedule);
-app.use('/api/v1/LR', routerLeisureRecords);
-app.use('/api/v1/gemini', routerGemini);
-app.use('/api/v1/bored', routerBored);
+app.use(`${routeGlobal}auth`, routerAuth);
+app.use(`${routeGlobal}user`, routerUser);
+app.use(`${routeGlobal}activities`, routerActivity);
+app.use(`${routeGlobal}schedules`, routerSchedule);
+app.use(`${routeGlobal}LR`, routerLeisureRecords);
+app.use(`${routeGlobal}gemini`, routerGemini);
+app.use(`${routeGlobal}bored`, routerBored);
+app.use(`${routeGlobal}cloudinary`, routerCloudinary);
 
 app.listen(env.server.port, () => {
     console.log(`[${env.server.nodeEnv}] Servidor corriendo en el puerto ${env.server.port}`);

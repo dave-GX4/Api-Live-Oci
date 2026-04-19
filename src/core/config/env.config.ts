@@ -1,9 +1,3 @@
-console.log('=== DEBUG Railway ENV ===');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('DB_HOST:', process.env.DB_HOST ? 'EXISTS (hidden)' : 'UNDEFINED');
-console.log('All Railway vars:', Object.keys(process.env).filter(k => !k.includes('PATH') && !k.includes('HOME')));
-console.log('=========================');
-
 import dotenv from "dotenv";
 import ConfigurationError from "../errors/ConfigurationError";
 
@@ -34,5 +28,12 @@ export const env = {
     externalApis: {
         gemini: getEnv('API_SERVER_GEMINI'),
         bored: getEnv('API_SERVER_BORED')
+    },
+    cloudinary: {
+        name: getEnv('CLOUDINARY_NAME_SERVICE'),
+        apiKey: getEnv('CLOUDINARY_API_KEY'),
+        apiSecret: getEnv('CLOUDINARY_API_SECRET'),
+        maxSizeMB: Number(process.env.CLOUDINARY_MAX_SIZE_MB) || 5,
+        targetSize: Number(process.env.CLOUDINARY_TARGET_SIZE) || 800
     }
 } as const;
