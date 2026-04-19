@@ -1,7 +1,7 @@
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
 import { CloudinaryRepository } from "../../domain/Cloudinary.Repository";
 import { UploadPhotoInput } from "../dtos/UploadPhotoInput";
-import { UploadPhotoOutput } from "../dtos/UploadPhotoOutput";
+import { UploadPhotoOutput } from "../dtos/MessagePhotoResponseDTO";
 import { CloudinaryService } from "../services/Cloudinary.Service";
 
 export default class UpdatePhotoUseCase {
@@ -25,8 +25,8 @@ export default class UpdatePhotoUseCase {
         await this.repository.updatePublicId(input.userId, result.publicId);
 
         return {
-            publicId: result.publicId,
-            url: result.url
+            message: "Se Actualizo Tu Foto Correctamente",
+            status: true
         };
     }
 }

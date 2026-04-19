@@ -18,7 +18,6 @@ export default class GetPhotoUseCase {
         const url = await this.cloudinaryService.getUrl(photo.publicId);
 
         return {
-            userId: photo.userId.getValue(),
             publicId: photo.publicId,
             url
         };
