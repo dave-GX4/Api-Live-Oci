@@ -19,7 +19,6 @@ export default class GetPhotoController {
             const response = await this.usecase.execute(userId);
 
             if (!response) {
-                // Si no hay foto, devolvemos 204 No Content o 404 según prefieras
                 return res.status(204).send();
             }
 

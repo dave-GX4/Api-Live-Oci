@@ -2,7 +2,7 @@ import UUID from "../../../../core/valueobjects/UUID";
 import { CloudinaryRepository } from "../../domain/Cloudinary.Repository";
 import FilePhoto from "../../domain/entity/FilePhoto";
 import { UploadPhotoInput } from "../dtos/UploadPhotoInput";
-import { UploadPhotoOutput } from "../dtos/UploadPhotoOutput";
+import { UploadPhotoOutput } from "../dtos/MessagePhotoResponseDTO";
 import { CloudinaryService } from "../services/Cloudinary.Service";
 
 export default class UploadPhotoUseCase {
@@ -16,7 +16,6 @@ export default class UploadPhotoUseCase {
 
         const publicId = `users/${valueId.getValue()}/avatar`;
 
-        // Si ya existe foto previa en BD, eliminarla de Cloudinary primero
         const existing = await this.repository.findByUserId(valueId.getValue());
         if (existing) {
             try {
@@ -37,8 +36,8 @@ export default class UploadPhotoUseCase {
         await this.repository.save(newFile);
 
         return {
-            publicId: result.publicId,
-            url: result.url
+            message: "Se Subio Tu Foto Correctamente",
+            status: true
         };
     }
 }
