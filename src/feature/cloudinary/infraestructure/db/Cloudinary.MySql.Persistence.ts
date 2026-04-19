@@ -78,33 +78,4 @@ export default class CloudinaryMySQLPersistence implements CloudinaryRepository 
             throw new DatabaseOperationError(`Error al eliminar la foto del usuario: ${message}`);
         }
     }
-
-    async updatePublicId(userId: string, publicId: string): Promise<void> {
-        const query = `
-            INSERT INTO photos (userId, publicId) 
-            VALUES (?, ?)
-            ON DUPLICATE KEY UPDATE publicId = VALUES(publicId)
-        `;
-        
-        const values = [userId, publicId];
-
-        try {
-            const [result] = await this.pool.execute<ResultSetHeader>(query, values);
-
-            if (result.affectedRows === 0) {
-                throw new NotFoundError("Usuario", userId, "UUID");
-            }
-        } catch (error) {
-            const mysqlError = error as { code?: string; message?: string };
-            
-            if (mysqlError.code === 'ER_NO_REFERENCED_ROW_2') {
-                throw new NotFoundError("Usuario", userId, "UUID");
-            }
-            
-            if (error instanceof NotFoundError) throw error;
-            
-            const message = error instanceof Error ? error.message : 'Error desconocido';
-            throw new DatabaseOperationError(`Error al actualizar la foto del usuario: ${message}`);
-        }
-    }
 }
