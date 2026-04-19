@@ -82,6 +82,7 @@ export default class CloudinaryImplService implements CloudinaryService{
                     {
                         public_id: publicId,
                         overwrite: true,
+                        invalidate: true,
                         resource_type: 'image',
                         format: 'jpg'
                     },
@@ -147,7 +148,8 @@ export default class CloudinaryImplService implements CloudinaryService{
                 crop: 'fill',
                 quality: 'auto',
                 fetch_format: 'auto',
-                secure: true
+                secure: true,
+                version: Date.now()
             });
         } catch (error) {
             throw new ExternalApiError(
