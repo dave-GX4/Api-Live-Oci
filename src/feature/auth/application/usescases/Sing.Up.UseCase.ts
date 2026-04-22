@@ -7,12 +7,17 @@ import UUID from "../../../../core/valueobjects/UUID";
 import Email from "../../../../core/valueobjects/Email";
 import Password from "../../../../core/valueobjects/Password";
 import AuthResponse from "../dtos/Auth.Response";
+import CodeRepository from "../../../code/domain/Code.Repository";
+import CodeService from "../../../../core/services/interface/codeService";
+import FriendCode from "../../../code/domain/entity/FriendCode";
 
 export default class SingUpUseCase {
     constructor(
         private readonly repository: AuthRepository,
         private readonly serviceUuid: UuidService,
-        private readonly serviceEncrypt: EncryptService
+        private readonly serviceEncrypt: EncryptService,
+        private readonly codeRepository: CodeRepository,
+        private readonly codeService: CodeService
     ) { }
 
     async run(authRequest: SingUpRequest): Promise<AuthResponse> {
@@ -33,6 +38,21 @@ export default class SingUpUseCase {
         }
 
         await this.repository.createUser(newUser)
+
+        const codeId = await this.serviceUuid.generate();
+        const codeIdValue = UUID.validate(codeId)
+        const uniqueCodeString = await this.codeService.generateUniqueCode();
+        const expirationDate = this.codeService.calculateExpirationDate();
+        const userIdString = uuidValue.getValue(); 
+
+        const initialFriendCode: FriendCode = {
+            id: codeIdValue,
+            userId: userIdString,
+            code: uniqueCodeString,
+            expiresAt: expirationDate,
+        };
+
+        await this.codeRepository.saveCodeUser(userIdString, initialFriendCode);
 
         return {
             message: "Se a creado tu cuenta correctamente: " + newUser.name,
