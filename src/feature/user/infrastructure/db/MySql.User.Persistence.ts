@@ -1,6 +1,6 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import UserRepository from "../../domain/User.Repository";
-import User from "../../domain/entitie/User";
+import User from "../../domain/entity/User";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
 import UUID from "../../../../core/valueobjects/UUID";
 import Email from "../../../../core/valueobjects/Email";

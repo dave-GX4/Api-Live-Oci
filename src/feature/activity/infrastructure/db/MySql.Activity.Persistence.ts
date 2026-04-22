@@ -1,6 +1,6 @@
 import { Pool, RowDataPacket } from "mysql2/promise";
 import ActivitiesRepository from "../../domain/Activities.Repository";
-import Activity from "../../domain/entitie/Activity";
+import Activity from "../../domain/entity/Activity";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
 import UUID from "../../../../core/valueobjects/UUID";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";

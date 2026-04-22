@@ -1,14 +1,14 @@
 import cors from 'cors';
 import express from "express";
-import routerAuth from "./src/feature/auth/infraestructure/router/router";
-import routerUser from "./src/feature/user/infraestructure/router/router";
-import routerActivity from "./src/feature/activity/infraestructure/router/router";
-import routerSchedule from "./src/feature/schedule/infraestructure/router/RouterSchedule";
-import routerLeisureRecords from "./src/feature/leisurerecord/infraestructure/router/router";
-import routerGemini from "./src/feature/gemini/infraestructure/routes/GeminiRouter";
-import routerBored from './src/feature/bored/infraestructure/routes/BoredRouter';
+import routerAuth from "./src/feature/auth/infrastructure/router/router";
+import routerUser from "./src/feature/user/infrastructure/router/router";
+import routerActivity from "./src/feature/activity/infrastructure/router/router";
+import routerSchedule from "./src/feature/schedule/infrastructure/router/RouterSchedule";
+import routerLeisureRecords from "./src/feature/leisurerecord/infrastructure/router/router";
+import routerGemini from "./src/feature/gemini/infrastructure/routes/GeminiRouter";
+import routerBored from './src/feature/bored/infrastructure/routes/BoredRouter';
 import { env } from './src/core/config/env.config';
-import routerCloudinary from './src/feature/cloudinary/infraestructure/router/Cloudinary.Routes';
+import routerCloudinary from './src/feature/cloudinary/infrastructure/router/Cloudinary.Routes';
 
 const app = express();
 

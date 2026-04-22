@@ -4,7 +4,7 @@ import UUID from "../../../../core/valueobjects/UUID";
 import LeisureRecord from "../../../leisurerecord/domain/entitie/LeisureRecord";
 import LeisureRecordRepository from "../../../leisurerecord/domain/LeisureRecord.Repository";
 import ActivitiesRepository from "../../domain/Activities.Repository";
-import Activity from "../../domain/entitie/Activity";
+import Activity from "../../domain/entity/Activity";
 import ActivityResponseDto from "../dto/ActivityResponseDto";
 
 export default class CreateActivityUseCase{

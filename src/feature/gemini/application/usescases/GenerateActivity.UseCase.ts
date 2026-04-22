@@ -4,7 +4,7 @@ import IGeminiService from "../externalprovider/IGemini.Service";
 import LeisureRecordRepository from "../../../leisurerecord/domain/LeisureRecord.Repository";
 import UuidService from "../../../../core/services/implements/uuidService";
 import UUID from "../../../../core/valueobjects/UUID";
-import Activity from "../../../activity/domain/entitie/Activity";
+import Activity from "../../../activity/domain/entity/Activity";
 import LeisureRecord from "../../../leisurerecord/domain/entitie/LeisureRecord";
 import ActivityInputData from "../dtos/ActivityInputData";
 import UserRepository from "../../../user/domain/User.Repository";

@@ -1,4 +1,4 @@
-import User from "./entitie/User"
+import User from "./entity/User"
 
 export default interface UserRepository {
     updateUser(id: string, updates: Partial<{
