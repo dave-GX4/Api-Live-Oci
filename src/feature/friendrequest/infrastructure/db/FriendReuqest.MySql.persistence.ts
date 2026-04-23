@@ -2,6 +2,9 @@ import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import FriendRequestRepository from "../../domain/FiendRequest.Repository";
 import FriendRequest from "../../domain/entity/FriendRequest";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
+import { RequestStatus } from "../../domain/entity/enums/Request.Status";
+import { NotFoundError } from "../../../../core/errors/NotFoundError";
+import UUID from "../../../../core/valueobjects/UUID";
 
 export default class FriendRequestMySqlPersistence implements FriendRequestRepository {
     constructor(private readonly pool: Pool) {}
@@ -45,7 +48,7 @@ export default class FriendRequestMySqlPersistence implements FriendRequestRepos
             
             const [rows] = await this.pool.execute<RowDataPacket[]>(
                 query, 
-                [userA, userB, userB, userA]  // Ambas direcciones
+                [userA, userB, userB, userA]
             );
             
             if (rows.length === 0) return null;
@@ -53,13 +56,69 @@ export default class FriendRequestMySqlPersistence implements FriendRequestRepos
             const row = rows[0];
             return {
                 id: row.id,
-                requesterId: row.requesterId,
-                addresseeId: row.addresseeId,
+                requesterId: UUID.fromDatabase(row.requesterId),
+                addresseeId: UUID.fromDatabase(row.addresseeId),
                 status: row.status,
                 createdAt: row.createdAt,
                 updatedAt: row.updatedAt
             };
         } catch (error) {
+            throw new DatabaseOperationError(error);
+        }
+    }
+
+    async findById(id: string): Promise<FriendRequest | null> {
+        try {
+            const query = `
+                SELECT id, requesterId, addresseeId, status, createdAt, updatedAt 
+                FROM friendRequests 
+                WHERE id = ?
+                LIMIT 1
+            `;
+            
+            const [rows] = await this.pool.execute<RowDataPacket[]>(query, [id]);
+            
+            if (rows.length === 0) return null;
+
+            const row = rows[0];
+            return {
+                id: row.id,
+                requesterId: UUID.fromDatabase(row.requesterId),
+                addresseeId: UUID.fromDatabase(row.addresseeId),
+                status: row.status,
+                createdAt: row.createdAt,
+                updatedAt: row.updatedAt
+            };
+        } catch (error) {
+            throw new DatabaseOperationError(error);
+        }
+    }
+
+    async update(id: string, status: RequestStatus): Promise<void> {
+        try {
+            const query = `
+                UPDATE friendRequests 
+                SET status = ?
+                WHERE id = ?
+            `;
+            
+            await this.pool.execute<ResultSetHeader>(query, [status, id]);
+            
+        } catch (error) {
+            throw new DatabaseOperationError(error);
+        }
+    }
+
+    async delete(id: string): Promise<void> {
+        try {
+            const query = `DELETE FROM friendRequests WHERE id = ?`;
+            const [result] = await this.pool.execute<ResultSetHeader>(query, [id]);
+            
+            if (result.affectedRows === 0) {
+                throw new NotFoundError('Solicitud de amistad', id, 'ID');
+            }
+        } catch (error) {
+            if (error instanceof NotFoundError) throw error;
             throw new DatabaseOperationError(error);
         }
     }
