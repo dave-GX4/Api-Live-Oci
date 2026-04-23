@@ -6,11 +6,36 @@ import UUID from "../../../../core/valueobjects/UUID";
 import Email from "../../../../core/valueobjects/Email";
 import Password from "../../../../core/valueobjects/Password";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
+import UserPublicProfile from "../../application/dto/UserPublicProfile";
 
 export default class MySqlUserPersistence implements UserRepository{
     constructor(
         private readonly pool : Pool
     ){}
+
+    async getPublicProfile(userId: string): Promise<UserPublicProfile | null> {
+        const query = "SELECT uuid, name FROM users WHERE uuid = ?";
+        const values = [userId];
+        
+        try {
+            const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
+
+            if (!rows || rows.length === 0) {
+                return null;
+            }
+
+            const row = rows[0];
+
+            return {
+                id: row.uuid,
+                name: row.name
+            };
+            
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Error desconocido';
+            throw new DatabaseOperationError(`Error al buscar usuario: ${message}`);
+        }
+    }
 
     async updateUser(
         id: string, 

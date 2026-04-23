@@ -11,6 +11,7 @@ import { env } from './src/core/config/env.config';
 import routerCloudinary from './src/feature/cloudinary/infrastructure/router/Cloudinary.Routes';
 import { codeExpirationCron } from './src/feature/code/infrastructure/Code.Dependences';
 import routerCode from './src/feature/code/infrastructure/router/Code.Routes';
+import routerFriendRequest from './src/feature/friendrequest/infrastructure/router/FriendRequest.Routes';
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(`${routeGlobal}gemini`, routerGemini);
 app.use(`${routeGlobal}bored`, routerBored);
 app.use(`${routeGlobal}cloudinary`, routerCloudinary);
 app.use(`${routeGlobal}code`, routerCode);
+app.use(`${routeGlobal}friends`, routerFriendRequest)
 
 app.listen(env.server.port, () => {
     console.log(`[${env.server.nodeEnv}] Servidor corriendo en el puerto ${env.server.port}`);

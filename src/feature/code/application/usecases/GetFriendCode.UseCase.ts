@@ -2,7 +2,9 @@ import CodeRepository from "../../domain/Code.Repository";
 import FriendCode from "../../domain/entity/FriendCode";
 
 export default class GetFriendCodeUseCase {
-    constructor(private readonly codeRepository: CodeRepository) {}
+    constructor(
+        private readonly codeRepository: CodeRepository
+    ) {}
 
     async execute(userId: string): Promise<FriendCode> {
         const friendCode = await this.codeRepository.getCodeByUser(userId);

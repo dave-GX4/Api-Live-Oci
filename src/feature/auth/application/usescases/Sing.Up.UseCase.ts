@@ -1,14 +1,14 @@
 import AuthRepository from "../../domain/auth_repository";
 import Auth from "../../domain/entitie/auth";
 import SingUpRequest from "../dtos/singUp_Request";
-import EncryptService from "../../../../core/services/interface/encryptService";
-import UuidService from "../../../../core/services/interface/uuidService";
+import EncryptService from "../../../../core/services/interface/I.Encrypt.Service";
+import UuidService from "../../../../core/services/interface/I.Uuid.Service";
 import UUID from "../../../../core/valueobjects/UUID";
 import Email from "../../../../core/valueobjects/Email";
 import Password from "../../../../core/valueobjects/Password";
 import AuthResponse from "../dtos/Auth.Response";
 import CodeRepository from "../../../code/domain/Code.Repository";
-import CodeService from "../../../../core/services/interface/codeService";
+import CodeService from "../../../../core/services/interface/I.Code.Service";
 import FriendCode from "../../../code/domain/entity/FriendCode";
 
 export default class SingUpUseCase {

@@ -1,9 +1,9 @@
 import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryService } from "../../application/services/Cloudinary.Service";
-import ExternalApiError from '../../../../core/errors/ExternalApiError';
 import sharp from 'sharp';
+import ExternalApiError from '../../errors/ExternalApiError';
+import ICloudinaryService from '../interface/I.Cloudinary.Service';
 
-export default class CloudinaryImplService implements CloudinaryService{
+export default class CloudinaryImplService implements ICloudinaryService{
     private readonly maxSizeBytes: number;
     private readonly targetSize: number;
 

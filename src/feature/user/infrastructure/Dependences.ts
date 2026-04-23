@@ -1,5 +1,5 @@
 import pool from "../../../core/config/data.base.conection";
-import BcryptEncryptService from "../../../core/services/implements/bcrypt_encrypt_service";
+import BcryptEncryptService from "../../../core/services/implements/BcryptEncrypt.Service";
 import DeleteAccountUseCase from "../application/usescases/DeleteAccount.UsesCase";
 import GetByIdUserUseCase from "../application/usescases/GetByIdUser.UseCase";
 import UpdateUserUseCase from "../application/usescases/UpdateUser.UseCase";

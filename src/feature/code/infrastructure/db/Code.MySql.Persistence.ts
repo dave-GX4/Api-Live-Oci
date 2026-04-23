@@ -8,6 +8,29 @@ export default class CodeMySqlPersistence implements CodeRepository{
         private readonly pool: Pool
     ){}
 
+    async findByCode(code: string): Promise<FriendCode | null> {
+        try {
+            const query = `SELECT * FROM friendCodes WHERE code = ? LIMIT 1`;
+            const [rows] = await this.pool.execute<RowDataPacket[]>(query, [code]);
+            
+            if (!rows || rows.length === 0) return null;
+            
+            const row = rows[0];
+            
+            return {
+                id: row.id,
+                userId: row.userId,
+                code: row.code,
+                expiresAt: new Date(row.expires_at),
+                regeneratedAt: row.regenerated_at ? new Date(row.regenerated_at) : undefined
+            };
+            
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Error desconocido';
+            throw new DatabaseOperationError(`Error al buscar código: ${message}`);
+        }
+    }
+
     async saveCodeUser(
         userId: string,
         code: FriendCode
@@ -19,7 +42,8 @@ export default class CodeMySqlPersistence implements CodeRepository{
 
             await this.pool.execute(query, [stringId, userId, code.code, code.expiresAt]);
         } catch (error) {
-            throw new DatabaseOperationError(error);
+            const message = error instanceof Error ? error.message : 'Error desconocido';
+            throw new DatabaseOperationError(`Error al crear tu código: ${message}`);
         }
     }
 
@@ -31,7 +55,8 @@ export default class CodeMySqlPersistence implements CodeRepository{
             if (rows.length === 0) return null;
             return rows[0] as FriendCode;
         } catch (error) {
-            throw new DatabaseOperationError(error);
+            const message = error instanceof Error ? error.message : 'Error desconocido';
+            throw new DatabaseOperationError(`Error al obtener su código: ${message}`);
         }
     }
 
@@ -50,7 +75,8 @@ export default class CodeMySqlPersistence implements CodeRepository{
                 [updates.code, updates.expiresAt, updates.regeneratedAt, userId]
             );
         } catch (error) {
-            throw new DatabaseOperationError(error);
+            const message = error instanceof Error ? error.message : 'Error desconocido';
+            throw new DatabaseOperationError(`Error al actualizar tu código: ${message}`);
         }
     }
 
@@ -65,7 +91,8 @@ export default class CodeMySqlPersistence implements CodeRepository{
             // Transformamos el resultado de la DB a un simple arreglo de IDs ["123", "456"]
             return rows.map(row => row.userId as string);
         } catch (error) {
-            throw new DatabaseOperationError(error);
+            const message = error instanceof Error ? error.message : 'Error desconocido';
+            throw new DatabaseOperationError(`Error al buscar código expirado: ${message}`);
         }
     }
 }

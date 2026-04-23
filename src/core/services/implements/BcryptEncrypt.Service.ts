@@ -1,7 +1,7 @@
 import { hash, compare } from "bcrypt";
-import EncryptService from "../interface/encryptService";
+import IEncryptService from "../interface/I.Encrypt.Service";
 
-export default class BcryptEncryptService implements EncryptService {
+export default class BcryptEncryptService implements IEncryptService {
 
     private readonly SALT_ROUNDS = 10;
 

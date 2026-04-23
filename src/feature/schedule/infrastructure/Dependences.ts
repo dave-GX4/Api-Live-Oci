@@ -1,5 +1,5 @@
 import pool from "../../../core/config/data.base.conection";
-import UuidService from "../../../core/services/implements/uuidService";
+import UuidService from "../../../core/services/implements/Uuid.Service";
 import AddScheduleUsesCase from "../application/usescases/AddSchedule.UseCase";
 import DeleteScheduleUseCase from "../application/usescases/DeleteSchedule.UseCase";
 import GetAllScheduleByUserUseCase from "../application/usescases/GetAllScheduleByUser.UseCase";

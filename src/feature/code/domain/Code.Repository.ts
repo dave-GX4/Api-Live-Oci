@@ -7,5 +7,6 @@ export default interface CodeRepository {
         userId: string, 
         updates: { code: string; expiresAt: Date; regeneratedAt: Date }
     ): Promise<void>;
-    getExpiredUsersIds(currentDate: Date): Promise<string[]>; 
+    getExpiredUsersIds(currentDate: Date): Promise<string[]>;
+    findByCode(code: string): Promise<FriendCode | null>;
 }

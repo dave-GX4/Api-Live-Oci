@@ -1,6 +1,6 @@
 import AuthRepository from "../../domain/auth_repository";
 import InvalidError from "../../../../core/errors/InvalidError";
-import EncryptService from "../../../../core/services/interface/encryptService";
+import EncryptService from "../../../../core/services/interface/I.Encrypt.Service";
 import AuthRespose from "../dtos/Auth.Response";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
 

@@ -1,9 +1,9 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import FilePhoto from "../../domain/entity/FilePhoto";
-import { CloudinaryRepository } from "../../domain/Cloudinary.Repository";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
 import UUID from "../../../../core/valueobjects/UUID";
+import CloudinaryRepository from "../../domain/Cloudinary.Repository";
 
 export default class CloudinaryMySQLPersistence implements CloudinaryRepository {
     constructor(

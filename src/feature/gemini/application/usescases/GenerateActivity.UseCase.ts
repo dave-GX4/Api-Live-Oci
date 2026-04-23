@@ -2,7 +2,7 @@ import ActivitiesRepository from "../../../activity/domain/Activities.Repository
 import ActivityResponseDto from "../../../activity/application/dto/ActivityResponseDto";
 import IGeminiService from "../externalprovider/IGemini.Service";
 import LeisureRecordRepository from "../../../leisurerecord/domain/LeisureRecord.Repository";
-import UuidService from "../../../../core/services/implements/uuidService";
+import UuidService from "../../../../core/services/implements/Uuid.Service";
 import UUID from "../../../../core/valueobjects/UUID";
 import Activity from "../../../activity/domain/entity/Activity";
 import LeisureRecord from "../../../leisurerecord/domain/entitie/LeisureRecord";

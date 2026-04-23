@@ -9,7 +9,7 @@ export class CodeExpirationCron {
     ) {}
 
     start(): void {
-        // Ejecutar cada hora (cambiarlo a '* * * * *' para cada minuto mientras pruebas)
+        // Ejecutar cada minuto (cambiarlo a '0 * * * *' para cada hora en produccion)
         cron.schedule('* * * * *', async () => {
             console.log("Ejecutando Cron de expiración de códigos...");
             

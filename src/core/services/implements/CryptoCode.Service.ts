@@ -1,7 +1,7 @@
 import crypto from 'crypto';
-import CodeService from "../interface/codeService";
+import ICodeService from '../interface/I.Code.Service';
 
-export default class CryptoCodeGenerator implements CodeService {
+export default class CryptoCodeGenerator implements ICodeService {
     private readonly CODE_LENGTH = 12;
     private readonly EXPIRATION_MONTHS = 8;
 

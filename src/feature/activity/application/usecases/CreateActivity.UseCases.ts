@@ -1,5 +1,5 @@
 import InvalidError from "../../../../core/errors/InvalidError";
-import UuidService from "../../../../core/services/interface/uuidService";
+import UuidService from "../../../../core/services/interface/I.Uuid.Service";
 import UUID from "../../../../core/valueobjects/UUID";
 import LeisureRecord from "../../../leisurerecord/domain/entitie/LeisureRecord";
 import LeisureRecordRepository from "../../../leisurerecord/domain/LeisureRecord.Repository";

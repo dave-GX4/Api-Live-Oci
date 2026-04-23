@@ -1,6 +1,6 @@
 import InvalidError from "../../../../core/errors/InvalidError";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
-import EncryptService from "../../../../core/services/interface/encryptService";
+import EncryptService from "../../../../core/services/interface/I.Encrypt.Service";
 import Email from "../../../../core/valueobjects/Email";
 import Password from "../../../../core/valueobjects/Password";
 import UUID from "../../../../core/valueobjects/UUID";

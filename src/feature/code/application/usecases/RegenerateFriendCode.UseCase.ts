@@ -1,4 +1,4 @@
-import CodeService from "../../../../core/services/interface/codeService";
+import CodeService from "../../../../core/services/interface/I.Code.Service";
 import CodeRepository from "../../domain/Code.Repository";
 import FriendCodeUpdateDTO from "../dtos/FriendCodeUpdateDTO";
 import FriendCodeNotifier from "../services/FriendCodeNotifier";

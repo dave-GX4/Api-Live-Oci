@@ -1,5 +1,5 @@
 import pool from "../../../core/config/data.base.conection";
-import UuidService from "../../../core/services/implements/uuidService";
+import UuidService from "../../../core/services/implements/Uuid.Service";
 import MySqlLeisureRecordPersistence from "../../leisurerecord/infrastructure/db/MySql.LeisureRecord.Persistence";
 import CreateActivityUseCase from "../application/usecases/CreateActivity.UseCases";
 import DeleteActivityUseCase from "../application/usecases/DeleteActivity.UseCase";

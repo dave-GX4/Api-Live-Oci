@@ -1,12 +1,12 @@
+import ICloudinaryService from "../../../../core/services/interface/I.Cloudinary.Service";
 import UUID from "../../../../core/valueobjects/UUID";
-import { CloudinaryRepository } from "../../domain/Cloudinary.Repository";
+import CloudinaryRepository from "../../domain/Cloudinary.Repository";
 import FilePhoto from "../../domain/entity/FilePhoto";
 import { UploadPhotoInput } from "../dtos/UploadPhotoInput";
-import { CloudinaryService } from "../services/Cloudinary.Service";
 
 export default class SavePhotoUseCase {
     constructor(
-        private readonly cloudinaryService: CloudinaryService,
+        private readonly cloudinaryService: ICloudinaryService,
         private readonly repository: CloudinaryRepository
     ) {}
 
