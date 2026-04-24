@@ -1,0 +1,62 @@
+import AuthRepository from "../../domain/auth_repository";
+import Auth from "../../domain/entitie/auth";
+import SingUpRequest from "../dtos/singUp_Request";
+import EncryptService from "../../../../core/services/interface/I.Encrypt.Service";
+import UuidService from "../../../../core/services/interface/I.Uuid.Service";
+import UUID from "../../../../core/valueobjects/UUID";
+import Email from "../../../../core/valueobjects/Email";
+import Password from "../../../../core/valueobjects/Password";
+import AuthResponse from "../dtos/Auth.Response";
+import CodeRepository from "../../../code/domain/Code.Repository";
+import CodeService from "../../../../core/services/interface/I.Code.Service";
+import FriendCode from "../../../code/domain/entity/FriendCode";
+
+export default class SingUpUseCase {
+    constructor(
+        private readonly repository: AuthRepository,
+        private readonly serviceUuid: UuidService,
+        private readonly serviceEncrypt: EncryptService,
+        private readonly codeRepository: CodeRepository,
+        private readonly codeService: CodeService
+    ) { }
+
+    async run(authRequest: SingUpRequest): Promise<AuthResponse> {
+        const uuid = await this.serviceUuid.generate()
+        const uuidValue = UUID.validate(uuid)
+
+        const emailValue = Email.validated(authRequest.email)
+
+        const passwordValue = Password.validated(authRequest.password)
+        const passwordHash = await this.serviceEncrypt.hash(passwordValue.getValue())
+        const passwordConvert = Password.convert(passwordHash)
+
+        const newUser: Auth = {
+            uuid: uuidValue,
+            name: authRequest.name,
+            email: emailValue,
+            password: passwordConvert
+        }
+
+        await this.repository.createUser(newUser)
+
+        const codeId = await this.serviceUuid.generate();
+        const codeIdValue = UUID.validate(codeId)
+        const uniqueCodeString = await this.codeService.generateUniqueCode();
+        const expirationDate = this.codeService.calculateExpirationDate();
+        const userIdString = uuidValue.getValue(); 
+
+        const initialFriendCode: FriendCode = {
+            id: codeIdValue,
+            userId: userIdString,
+            code: uniqueCodeString,
+            expiresAt: expirationDate,
+        };
+
+        await this.codeRepository.saveCodeUser(userIdString, initialFriendCode);
+
+        return {
+            message: "Se a creado tu cuenta correctamente: " + newUser.name,
+            status: true
+        }
+    }
+}

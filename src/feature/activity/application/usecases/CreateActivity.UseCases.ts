@@ -1,10 +1,10 @@
 import InvalidError from "../../../../core/errors/InvalidError";
-import UuidService from "../../../../core/services/interface/uuidService";
+import UuidService from "../../../../core/services/interface/I.Uuid.Service";
 import UUID from "../../../../core/valueobjects/UUID";
 import LeisureRecord from "../../../leisurerecord/domain/entitie/LeisureRecord";
 import LeisureRecordRepository from "../../../leisurerecord/domain/LeisureRecord.Repository";
 import ActivitiesRepository from "../../domain/Activities.Repository";
-import Activity from "../../domain/entitie/Activity";
+import Activity from "../../domain/entity/Activity";
 import ActivityResponseDto from "../dto/ActivityResponseDto";
 
 export default class CreateActivityUseCase{

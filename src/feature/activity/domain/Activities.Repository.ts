@@ -1,4 +1,4 @@
-import Activity from "./entitie/Activity";
+import Activity from "./entity/Activity";
 
 export default interface ActivitiesRepository{
     createActivity(activity: Activity): Promise<void>

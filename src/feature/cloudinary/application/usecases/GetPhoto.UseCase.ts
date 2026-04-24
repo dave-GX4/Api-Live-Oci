@@ -1,11 +1,11 @@
-import { CloudinaryRepository } from "../../domain/Cloudinary.Repository";
+import ICloudinaryService from "../../../../core/services/interface/I.Cloudinary.Service";
+import CloudinaryRepository from "../../domain/Cloudinary.Repository";
 import { GetPhotoOutput } from "../dtos/GetPhotoOutput";
-import { CloudinaryService } from "../services/Cloudinary.Service";
 
 export default class GetPhotoUseCase {
     constructor(
         private readonly repository: CloudinaryRepository,
-        private readonly cloudinaryService: CloudinaryService
+        private readonly cloudinaryService: ICloudinaryService
     ) {}
 
     async execute(userId: string): Promise<GetPhotoOutput | null> {

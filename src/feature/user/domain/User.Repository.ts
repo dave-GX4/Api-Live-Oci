@@ -1,4 +1,5 @@
-import User from "./entitie/User"
+import UserPublicProfile from "../application/dto/UserPublicProfile";
+import User from "./entity/User"
 
 export default interface UserRepository {
     updateUser(id: string, updates: Partial<{
@@ -13,4 +14,5 @@ export default interface UserRepository {
     }>): Promise<void>
     getByIdUser(id: string): Promise<User | null>
     deleteAccount(id: string): Promise<void>
+    getPublicProfile(userId: string): Promise<UserPublicProfile | null>;
 }

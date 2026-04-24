@@ -1,5 +1,5 @@
 import InvalidError from "../../../../core/errors/InvalidError";
-import UuidService from "../../../../core/services/interface/uuidService";
+import UuidService from "../../../../core/services/interface/I.Uuid.Service";
 import UUID from "../../../../core/valueobjects/UUID";
 import Schedule from "../../domain/entitie/Schedule";
 import ScheduleRepository from "../../domain/Schedule.Repository";

@@ -1,10 +1,11 @@
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
-import { CloudinaryRepository } from "../../domain/Cloudinary.Repository";
-import { CloudinaryService } from "../services/Cloudinary.Service";
+import ICloudinaryService from "../../../../core/services/interface/I.Cloudinary.Service";
+import CloudinaryRepository from "../../domain/Cloudinary.Repository";
+
 
 export default class DeletePhotoUseCase {
     constructor(
-        private readonly cloudinaryService: CloudinaryService,
+        private readonly cloudinaryService: ICloudinaryService,
         private readonly repository: CloudinaryRepository
     ) {}
 
