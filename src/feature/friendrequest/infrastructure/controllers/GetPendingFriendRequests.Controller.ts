@@ -1,30 +1,30 @@
 import { Request, Response } from "express";
-import SendFriendRequestUseCase from "../../application/usecases/SendFriendRequest.UseCase";
+import GetPendingFriendRequestsUseCase from "../../application/usecases/GetPendingFriendRequests.UseCase";
 import InvalidError from "../../../../core/errors/InvalidError";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
 
-export default class SendFriendRequestController {
+export default class GetPendingFriendRequestsController {
     constructor(
-        private readonly useCase: SendFriendRequestUseCase
+        private readonly useCase: GetPendingFriendRequestsUseCase
     ) {}
 
     async run(req: Request, res: Response): Promise<Response> {
         try {
-            const { userIdA, userIdB } = req.body;
-
-            if (!userIdA || typeof userIdA !== 'string') {
-                throw new InvalidError('El ID del usuario que envía (userIdA) es requerido');
+            const id = req.params.id as string; 
+            
+            if (!id || typeof id !== 'string') {
+                throw new InvalidError("El ID del usuario es requerido en la URL");
             }
 
-            if (!userIdB || typeof userIdB !== 'string') {
-                throw new InvalidError('El ID del usuario destino (userIdB) es requerido');
-            }
+            // Ejecutamos el caso de uso
+            const requests = await this.useCase.run(id);
 
-            const response = await this.useCase.run(userIdA, userIdB);
-
-            return res.status(201).json(response);
-
+            return res.status(200).json({ 
+                success: true, 
+                data: requests 
+            });
+            
         } catch (error) {
             if (error instanceof InvalidError) {
                 return res.status(400).json({
@@ -47,7 +47,8 @@ export default class SendFriendRequestController {
                 });
             }
 
-            console.error('Error inesperado en SendFriendRequestController:', error);
+            // Error genérico por si falla algo inesperado (Ej: Cloudinary caído)
+            console.error('Error inesperado en GetPendingFriendRequestsController:', error);
             return res.status(500).json({
                 success: false,
                 error: 'Error interno del servidor'

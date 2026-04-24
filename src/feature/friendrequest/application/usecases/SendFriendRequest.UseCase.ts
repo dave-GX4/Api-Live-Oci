@@ -1,15 +1,20 @@
 import InvalidError from "../../../../core/errors/InvalidError";
 import IUuidService from "../../../../core/services/interface/I.Uuid.Service";
 import UUID from "../../../../core/valueobjects/UUID";
+import UserRepository from "../../../user/domain/User.Repository";
 import FriendRequest from "../../domain/entity/FriendRequest";
 import FriendRequestRepository from "../../domain/FiendRequest.Repository";
 import ResponseRequest from "../dtos/ResponseRequest";
+import FriendRequestNotifier from "../services/FriendRequestNotifier";
 
 export default class SendFriendRequestUseCase {
     constructor(
         private readonly friendRequestRepository: FriendRequestRepository,
-        private readonly uuidService: IUuidService
+        private readonly uuidService: IUuidService,
+        private readonly userRepository: UserRepository,
+        private readonly sseNotifier: FriendRequestNotifier
     ) {}
+
 
     async run(userIdA: string, userIdB: string): Promise<ResponseRequest> {
         const valueIdA = UUID.validate(userIdA);
@@ -20,7 +25,10 @@ export default class SendFriendRequestUseCase {
         }
 
         // Buscar si A ya envió a B (cualquier estado)
-        const existingRequest = await this.friendRequestRepository.findBetweenUsers(valueIdA.getValue(), valueIdB.getValue());
+        const existingRequest = await this.friendRequestRepository.findBetweenUsers(
+            valueIdA.getValue(), 
+            valueIdB.getValue()
+        );
 
         if (existingRequest) {
             const isAtoB = existingRequest.requesterId.getValue() === valueIdA.getValue();
@@ -57,7 +65,7 @@ export default class SendFriendRequestUseCase {
             }
         }
 
-        const newId = await this.uuidService.generate()
+        const newId = await this.uuidService.generate();
 
         const request: FriendRequest = {
             id: newId,
@@ -68,9 +76,23 @@ export default class SendFriendRequestUseCase {
 
         await this.friendRequestRepository.save(request);
 
-        return {
-            message: 'Solicitud de amistad enviada correctamente',
-            success: true
-        };
+        try {
+            // Buscas cómo se llama el que envió para mandarlo en la notificación
+            const senderProfile = await this.userRepository.getPublicProfile(userIdA);
+            
+            this.sseNotifier.notifyNewRequest(userIdB, {
+                id: newId,
+                requesterId: userIdA,
+                requesterName: senderProfile?.name || 'Alguien',
+                status: 'pending',
+                createdAt: new Date(),
+                message: `${senderProfile?.name || 'Alguien'} te ha enviado una solicitud.`
+            });
+        } catch (error) {
+            console.error("No se pudo notificar por SSE", error);
+            // No hacemos throw aquí para que el HTTP POST no falle si falla el SSE
+        }
+
+        return { message: 'Solicitud de amistad enviada', success: true };
     }
 }

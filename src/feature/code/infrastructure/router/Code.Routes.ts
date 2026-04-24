@@ -8,9 +8,9 @@ routerCode.get(
     (req: Request, res: Response) => getController.streamCode(req, res)
 );
 
-routerCode.get(
+routerCode.post(
     "/search/:id",
     (req: Request, res: Response) => searchController.run(req, res)
-)
+);
 
 export default routerCode;

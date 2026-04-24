@@ -11,14 +11,14 @@ import GetCodeController from "./controllers/GetCode.Controller";
 import SearchUserByCodeController from "./controllers/SearchUserByCode.Controller";
 import { CodeExpirationCron } from "./cron/CodeExpiration.Cron";
 import CodeMySqlPersistence from "./db/Code.MySql.Persistence";
-import SseConnectionManager from "./services/impl/SseConnectionManager";
+import SseCodeConnectionManager from "./services/implements/SseCodeConnectionManager";
 
 const codeMySqlPersistence = new CodeMySqlPersistence(pool);
 const userMySqlPersistence = new MySqlUserPersistence(pool);
 const cloudinaryMySQLPersistence = new CloudinaryMySQLPersistence(pool);
 
 const cryptoCodeService = new CryptoCodeGenerator();
-const sseConnectionManager = new SseConnectionManager();
+const sseConnectionManager = new SseCodeConnectionManager();
 const cloudinaryService = new CloudinaryImplService(
     env.cloudinary.name,
     env.cloudinary.apiKey,

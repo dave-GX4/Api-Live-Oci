@@ -94,6 +94,37 @@ export default class FriendRequestMySqlPersistence implements FriendRequestRepos
         }
     }
 
+    async findPendingByUserId(userId: string): Promise<FriendRequest[]> {
+        try {
+            const query = `
+                SELECT id, requesterId, addresseeId, status, createdAt, updatedAt 
+                FROM friendRequests 
+                WHERE addresseeId = ? AND status = 'pending'
+                ORDER BY createdAt DESC
+            `;
+            
+            // Ejecutamos la consulta. Pasamos userId
+            const [rows] = await this.pool.execute<RowDataPacket[]>(query, [userId]);
+            
+            // Si no hay resultados, devolvemos un array vacío
+            if (rows.length === 0) return [];
+
+            // Mapeamos los resultados a tu entidad FriendRequest
+            return rows.map(row => ({
+                id: row.id,
+                requesterId: UUID.fromDatabase(row.requesterId),
+                addresseeId: UUID.fromDatabase(row.addresseeId),
+                status: row.status,
+                createdAt: row.createdAt,
+                updatedAt: row.updatedAt
+            }));
+            
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Error desconocido';
+            throw new DatabaseOperationError(`Error al buscar solicitudes pendientes: ${message}`);
+        }
+    }
+
     async update(id: string, status: RequestStatus): Promise<void> {
         try {
             const query = `

@@ -1,14 +1,13 @@
 import { Request, Response } from "express";
 import InvalidError from "../../../../core/errors/InvalidError";
 import GetFriendCodeUseCase from "../../application/usecases/GetFriendCode.UseCase";
-import SseConnectionManager from "../services/impl/SseConnectionManager";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
-import IConnectionManager from "../services/interfaces/IConnectionManager";
+import ICodeConnectionManager from "../services/interfaces/ICodeConnectionManager";
 
 export default class GetCodeController {
     constructor(
         private readonly getFriendCodeUseCase: GetFriendCodeUseCase,
-        private readonly sseManager: IConnectionManager
+        private readonly sseManager: ICodeConnectionManager
     ) {}
 
      async streamCode(req: Request, res: Response): Promise<void> {
