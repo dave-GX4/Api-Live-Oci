@@ -2,6 +2,7 @@ import { Pool, RowDataPacket } from "mysql2/promise";
 import CodeRepository from "../../domain/Code.Repository";
 import FriendCode from "../../domain/entity/FriendCode";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
+import UUID from "../../../../core/valueobjects/UUID";
 
 export default class CodeMySqlPersistence implements CodeRepository{
     constructor(
@@ -18,7 +19,7 @@ export default class CodeMySqlPersistence implements CodeRepository{
             const row = rows[0];
             
             return {
-                id: row.id,
+                id: UUID.fromDatabase(row.id),
                 userId: row.userId,
                 code: row.code,
                 expiresAt: new Date(row.expiresAt),
