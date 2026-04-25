@@ -12,14 +12,14 @@ export default class SearchUserByCodeController{
     async run(req: Request, res: Response): Promise<Response>{
         try {
             const id = req.params.id as string;
-            const { code } = req.body;
+            const code = req.query.code as string;
 
             if (!id) {
-                throw new InvalidError('El ID del usuario es requerido en la URL');
+                throw new InvalidError('El ID del usuario es requerido');
             }
 
             if (!code || typeof code !== 'string') {
-                throw new InvalidError('El código es requerido en el body');
+                throw new InvalidError('El código es requerido para la busqueda de amigo');
             }
 
             const result = await this.useCase.run(id, code);
