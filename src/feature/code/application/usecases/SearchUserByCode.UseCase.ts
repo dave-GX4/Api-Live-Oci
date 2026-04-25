@@ -47,9 +47,29 @@ export default class SearchUserByCodeUseCase {
         let isRequester: boolean | undefined;
 
         if (existingRequest) {
-            requestId = existingRequest.id;
-            requestStatus = existingRequest.status;
             isRequester = existingRequest.requesterId.getValue() === searcherId;
+            
+            if (existingRequest.status === 'rejected') {
+                // Lógica de las 24 horas
+                const now = Date.now();
+                const lastUpdate = existingRequest.updatedAt?.getTime() || existingRequest.createdAt?.getTime() || now;
+                const hoursSinceRejection = (now - lastUpdate) / (1000 * 60 * 60);
+
+                if (hoursSinceRejection < 24) {
+                    // Aún está castigado, mostramos que fue rechazado
+                    requestId = existingRequest.id;
+                    requestStatus = 'rejected';
+                } else {
+                    // Ya pasaron 24h. Lo tratamos como "undefined" para que la UI muestre el botón "Enviar"
+                    requestId = undefined;
+                    requestStatus = undefined;
+                    isRequester = undefined;
+                }
+            } else {
+                // Es pending o accepted, lo pasamos tal cual
+                requestId = existingRequest.id;
+                requestStatus = existingRequest.status;
+            }
         }
 
         return {
