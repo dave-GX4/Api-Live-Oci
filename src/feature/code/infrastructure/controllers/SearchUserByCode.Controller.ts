@@ -26,6 +26,7 @@ export default class SearchUserByCodeController{
 
             return res.status(200).json(result);
         } catch (error) {
+            
             if (error instanceof NotFoundError) {
                 return res.status(404).json({
                     success: false,

@@ -21,8 +21,8 @@ export default class CodeMySqlPersistence implements CodeRepository{
                 id: row.id,
                 userId: row.userId,
                 code: row.code,
-                expiresAt: new Date(row.expires_at),
-                regeneratedAt: row.regenerated_at ? new Date(row.regenerated_at) : undefined
+                expiresAt: new Date(row.expiresAt),
+                regeneratedAt: row.regeneratedAt ? new Date(row.regeneratedAt) : undefined
             };
             
         } catch (error) {
