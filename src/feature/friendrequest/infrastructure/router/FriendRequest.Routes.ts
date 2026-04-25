@@ -28,4 +28,4 @@ routerFriendRequest.get(
     (req: Request, res: Response) => streamFriendRequestController.run(req, res)
 );
 
-export default routerFriendRequest;
+export default routerFriendRequest; 

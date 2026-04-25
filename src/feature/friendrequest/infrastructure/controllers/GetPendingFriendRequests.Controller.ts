@@ -17,13 +17,9 @@ export default class GetPendingFriendRequestsController {
                 throw new InvalidError("El ID del usuario es requerido en la URL");
             }
 
-            // Ejecutamos el caso de uso
             const requests = await this.useCase.run(id);
 
-            return res.status(200).json({ 
-                success: true, 
-                data: requests 
-            });
+            return res.status(200).json(requests);
             
         } catch (error) {
             if (error instanceof InvalidError) {
