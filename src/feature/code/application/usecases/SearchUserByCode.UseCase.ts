@@ -37,7 +37,6 @@ export default class SearchUserByCodeUseCase {
             avatarUrl = await this.cloudinaryService.getUrl(photo.publicId);
         }
 
-        // Buscar si ya existe una solicitud entre ambos (en cualquier dirección)
         const existingRequest = await this.friendRequestRepository.findBetweenUsers(
             searcherId, 
             friendCode.userId

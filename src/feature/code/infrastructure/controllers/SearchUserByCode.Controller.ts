@@ -28,31 +28,22 @@ export default class SearchUserByCodeController{
         } catch (error) {
             
             if (error instanceof NotFoundError) {
-                return res.status(404).json({
-                    success: false,
-                    error: error.message
-                });
+                console.warn(`[SearchUser] Not Found: ${error.message}`);
+                return res.status(404).json({ success: false, error: error.message });
             }
 
             if (error instanceof InvalidError) {
-                return res.status(400).json({
-                    success: false,
-                    error: error.message
-                });
+                console.warn(`[SearchUser] Invalid: ${error.message}`);
+                return res.status(400).json({ success: false, error: error.message });
             }
 
             if (error instanceof DatabaseOperationError) {
-                return res.status(500).json({
-                    success: false,
-                    error: error.message
-                });
+                console.error(`[SearchUser] DB Error:`, error);
+                return res.status(500).json({ success: false, error: error.message });
             }
 
             console.error('Error inesperado en SearchUserByCodeController:', error);
-            return res.status(500).json({
-                success: false,
-                error: 'Error interno del servidor'
-            });
+            return res.status(500).json({ success: false, error: 'Error interno del servidor' });
         }
     }
 }
