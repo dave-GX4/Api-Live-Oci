@@ -3,6 +3,7 @@ import { env } from "../../../core/config/env.config";
 import CloudinaryImplService from "../../../core/services/implements/Cloudinary.Impl.Service";
 import CryptoCodeGenerator from "../../../core/services/implements/CryptoCode.Service";
 import CloudinaryMySQLPersistence from "../../cloudinary/infrastructure/db/Cloudinary.MySql.Persistence";
+import FriendRequestMySqlPersistence from "../../friendrequest/infrastructure/db/FriendReuqest.MySql.persistence";
 import MySqlUserPersistence from "../../user/infrastructure/db/MySql.User.Persistence";
 import GetFriendCodeUseCase from "../application/usecases/GetFriendCode.UseCase";
 import RegenerateFriendCodeUseCase from "../application/usecases/RegenerateFriendCode.UseCase";
@@ -16,6 +17,7 @@ import SseCodeConnectionManager from "./services/implements/SseCodeConnectionMan
 const codeMySqlPersistence = new CodeMySqlPersistence(pool);
 const userMySqlPersistence = new MySqlUserPersistence(pool);
 const cloudinaryMySQLPersistence = new CloudinaryMySQLPersistence(pool);
+const friendrequestMySqlPersistence = new FriendRequestMySqlPersistence(pool)
 
 const cryptoCodeService = new CryptoCodeGenerator();
 const sseConnectionManager = new SseCodeConnectionManager();
@@ -37,7 +39,9 @@ const searchUseCase = new SearchUserByCodeUseCase(
     codeMySqlPersistence,
     userMySqlPersistence,
     cloudinaryMySQLPersistence,
-    cloudinaryService
+    cloudinaryService,
+    friendrequestMySqlPersistence
+
 );
 
 export const getController = new GetCodeController(
