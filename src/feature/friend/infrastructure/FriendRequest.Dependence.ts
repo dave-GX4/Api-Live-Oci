@@ -18,7 +18,6 @@ import GetFriendsListController from "./controllers/GetFriendsList.Controller";
 import GetPendingFriendRequestsController from "./controllers/GetPendingFriendRequests.Controller";
 import RemoveFriendController from "./controllers/RemoveFriend.Controller";
 import SendFriendRequestController from "./controllers/SendFriendRequest.Controller";
-import StreamFriendRequestController from "./controllers/StreamFriendRequest.Controller";
 import FriendMySqlPersistence from "./db/Friend.MySql.persistence";
 
 const mySqlPersistenceFriend = new FriendMySqlPersistence(pool);
@@ -77,6 +76,5 @@ export const sendFriendRequestController = new SendFriendRequestController(sendF
 export const friendRequestUpdateController = new FriendRequestUpdateController(friendRequestUpdateUseCase);
 export const cancelFriendRequestController = new CancelFriendRequestController(cancelFriendRequestUseCase);
 export const getPendingFriendRequestsController = new GetPendingFriendRequestsController(getPendingFriendRequestsUseCase);
-export const streamFriendRequestController = new StreamFriendRequestController(friendNotifierSse);
 export const removeFriendController = new GetFriendsListController(getFriendsListUseCase);
 export const getFriendsListController = new RemoveFriendController(removeFriendUseCase);

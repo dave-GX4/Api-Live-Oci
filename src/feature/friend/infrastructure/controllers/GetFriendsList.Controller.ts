@@ -18,10 +18,7 @@ export default class GetFriendsListController {
 
             const friends = await this.useCase.run(userId);
 
-            return res.status(200).json({
-                success: true,
-                data: friends
-            });
+            return res.status(200).json(friends);
 
         } catch (error) {
             if (error instanceof InvalidError) {
