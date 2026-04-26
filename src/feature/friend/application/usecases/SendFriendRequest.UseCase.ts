@@ -6,7 +6,7 @@ import CloudinaryRepository from "../../../cloudinary/domain/Cloudinary.Reposito
 import Notification from "../../../notifications/domain/entity/Notification";
 import NotificationRepository from "../../../notifications/domain/Notification.Repository";
 import UserRepository from "../../../user/domain/User.Repository";
-import FriendRequest from "../../domain/entity/FriendRequest";
+import Friend from "../../domain/entity/Friend";
 import FriendRepository from "../../domain/Fiend.Repository";
 import ResponseRequest from "../dtos/ResponseRequest";
 import FriendRequestNotifier from "../services/FriendRequestNotifier";
@@ -74,7 +74,7 @@ export default class SendFriendRequestUseCase {
 
         const newId = await this.uuidService.generate();
 
-        const request: FriendRequest = {
+        const request: Friend = {
             id: newId,
             requesterId: valueIdA,
             addresseeId: valueIdB,

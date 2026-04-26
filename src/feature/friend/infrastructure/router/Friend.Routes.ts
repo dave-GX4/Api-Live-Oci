@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { cancelFriendRequestController, friendRequestUpdateController, getPendingFriendRequestsController, sendFriendRequestController, streamFriendRequestController } from "../FriendRequest.Dependence";
+import { cancelFriendRequestController, friendRequestUpdateController, getFriendsListController, getPendingFriendRequestsController, removeFriendController, sendFriendRequestController, streamFriendRequestController } from "../FriendRequest.Dependence";
 
 const routerFriend = Router();
 
@@ -26,6 +26,16 @@ routerFriend.get(
 routerFriend.get(
     "/stream/:id",
     (req: Request, res: Response) => streamFriendRequestController.run(req, res)
+);
+
+routerFriend.get(
+    '/get/all/:userId', 
+    (req: Request, res: Response) => getFriendsListController.run(req, res)
+);
+
+routerFriend.delete(
+    '/delete/:friendshipId', 
+    (req: Request, res: Response) => removeFriendController.run(req, res)
 );
 
 export default routerFriend; 

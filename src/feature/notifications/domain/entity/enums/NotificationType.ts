@@ -1,5 +1,6 @@
 export type NotificationType = 
-  | "friend_request" 
+  | "friend_request"
+  | "friend_accepted" 
   | "space_invite" 
   | "member_joined"
   | "member_ready"

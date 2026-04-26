@@ -15,7 +15,7 @@ export default class NotificationMySqlPersistence implements NotificationReposit
         try {
             const query = `
                 INSERT INTO notifications 
-                (id, user_id, type, title, body, data, is_read, channel, created_at) 
+                (id, userId, type, title, body, data, isRead, channel, createdAt) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, COALESCE(?, NOW()))
             `;
             
@@ -42,10 +42,10 @@ export default class NotificationMySqlPersistence implements NotificationReposit
     async findNotificationByUserId(userId: string, limit: number = 20): Promise<Notification[]> {
         try {
             const query = `
-                SELECT id, user_id, type, title, body, data, is_read, channel, created_at 
+                SELECT id, userId, type, title, body, data, isRead, channel, createdAt 
                 FROM notifications 
-                WHERE user_id = ? 
-                ORDER BY created_at DESC 
+                WHERE userId = ? 
+                ORDER BY createdAt DESC 
                 LIMIT ?
             `;
 
@@ -61,14 +61,14 @@ export default class NotificationMySqlPersistence implements NotificationReposit
 
                 return {
                     id: row.id,
-                    userId: row.user_id,
+                    userId: row.userId,
                     type: row.type as NotificationType,
                     title: row.title,
                     body: row.body,
                     data: parsedData,
-                    read: row.is_read === true,
+                    read: row.isRead === true,
                     channel: row.channel as NotificationChannel,
-                    createdAt: row.created_at
+                    createdAt: row.createdAt
                 };
             });
 
@@ -79,7 +79,7 @@ export default class NotificationMySqlPersistence implements NotificationReposit
 
     async markAsRead(notificationId: string): Promise<void> {
         try {
-            const query = `UPDATE notifications SET is_read = 1 WHERE id = ?`;
+            const query = `UPDATE notifications SET isRead = true WHERE id = ?`;
             
             const [result] = await this.pool.execute<ResultSetHeader>(query, [notificationId]);
 
@@ -97,7 +97,7 @@ export default class NotificationMySqlPersistence implements NotificationReposit
 
     async markAllAsRead(userId: string): Promise<void> {
         try {
-            const query = `UPDATE notifications SET is_read = 1 WHERE user_id = ? AND is_read = 0`;
+            const query = `UPDATE notifications SET isRead = true WHERE userId = ? AND isRead = false`;
             
             await this.pool.execute(query, [userId]);
             
