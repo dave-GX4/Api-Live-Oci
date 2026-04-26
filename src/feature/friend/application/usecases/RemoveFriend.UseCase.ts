@@ -48,8 +48,8 @@ export default class RemoveFriendUseCase {
         }
 
         return {
-            success: true,
-            message: 'Amigo eliminado correctamente'
+            message: 'Amigo eliminado correctamente',
+            success: true
         };
     }
 }
