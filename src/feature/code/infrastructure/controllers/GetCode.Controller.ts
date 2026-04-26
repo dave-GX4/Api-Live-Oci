@@ -2,63 +2,45 @@ import { Request, Response } from "express";
 import InvalidError from "../../../../core/errors/InvalidError";
 import GetFriendCodeUseCase from "../../application/usecases/GetFriendCode.UseCase";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
-import ICodeConnectionManager from "../services/interfaces/ICodeConnectionManager";
+import IGlobalConnectionManager from "../../../../core/services/interface/I.GlobalConnectionManager";
+import { NotFoundError } from "../../../../core/errors/NotFoundError";
 
 export default class GetCodeController {
     constructor(
-        private readonly getFriendCodeUseCase: GetFriendCodeUseCase,
-        private readonly sseManager: ICodeConnectionManager
+        private readonly getFriendCodeUseCase: GetFriendCodeUseCase
     ) {}
 
-     async streamCode(req: Request, res: Response): Promise<void> {
+    async run(req: Request, res: Response): Promise<Response> {
         try {
-            const id = req.params.id as string;
-            if (!id) throw new InvalidError("No se encontró tu identificador");
-
-            // Headers
-            res.writeHead(200, {
-                'Content-Type': 'text/event-stream',
-                'Cache-Control': 'no-cache',
-                'Connection': 'keep-alive'
-            });
-
-            this.sseManager.addClient(id, res);
-
-            // Enviar el código actual inmediatamente al abrir la pantalla
-            const currentCode = await this.getFriendCodeUseCase.execute(id);
-            if (currentCode) {
-                res.write(`data: ${JSON.stringify(currentCode)}\n\n`);
+            const userId = req.params.id as string;
+            
+            if (!userId) {
+                throw new InvalidError("No se encontró tu identificador");
             }
 
-            // HEARTBEAT PARA RAILWAY
-            // Enviamos un comentario SSE (:) cada 30 segundos
-            const heartbeatInterval = setInterval(() => {
-                res.write(':\n\n'); 
-            }, 30000); 
+            // Ejecuta el caso de uso que va a la base de datos
+            const currentCode = await this.getFriendCodeUseCase.execute(userId);
 
-            // PREVENIR MEMORY LEAKS AL CERRAR
-            req.on('close', () => {
-                console.log(`Cliente desconectado: ${id}`);
-                // Detener el reloj (interval) para liberar RAM
-                clearInterval(heartbeatInterval); 
-                // Eliminar al usuario del mapa
-                this.sseManager.removeClient(id);
-            });
+            return res.status(200).json(currentCode);
 
         } catch (error) {
-            if (!res.headersSent) {
-                if (error instanceof InvalidError) {
-                    res.status(400).json({ error: error.message });
-                } else if (error instanceof DatabaseOperationError) {
-                    res.status(500).json({ error: "Error en la base de datos" });
-                } else {
-                    res.status(500).json({ error: "Error interno del servidor" });
-                }
-            } else {
-                console.error("Error en el stream SSE:", error);
-                res.write(`data: {"error": "Error interno"}\n\n`);
-                res.end();
+            if (error instanceof InvalidError) {
+                console.warn(`[GetCode] InvalidRequest: ${error.message}`);
+                return res.status(400).json({ success: false, error: error.message });
             }
+
+            if (error instanceof NotFoundError) {
+                console.warn(`[GetCode] NotFound: ${error.message}`);
+                return res.status(404).json({ success: false, error: error.message });
+            }
+
+            if (error instanceof DatabaseOperationError) {
+                console.error(`[GetCode] DB_ERROR:`, error);
+                return res.status(500).json({ success: false, error: "Error en la base de datos" });
+            }
+
+            console.error('[GetCode] Error inesperado:', error);
+            return res.status(500).json({ success: false, error: "Error interno del servidor" });
         }
     }
 }

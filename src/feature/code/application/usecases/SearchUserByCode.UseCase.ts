@@ -2,7 +2,7 @@ import InvalidError from "../../../../core/errors/InvalidError";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
 import ICloudinaryService from "../../../../core/services/interface/I.Cloudinary.Service";
 import CloudinaryRepository from "../../../cloudinary/domain/Cloudinary.Repository";
-import FriendRequestRepository from "../../../friendrequest/domain/FiendRequest.Repository";
+import FriendRequestRepository from "../../../friend/domain/Fiend.Repository";
 import UserRepository from "../../../user/domain/User.Repository";
 import CodeRepository from "../../domain/Code.Repository";
 import FoundUserResult from "../dtos/FoundUserResult";

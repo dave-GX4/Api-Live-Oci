@@ -1,1 +1,0 @@
-export type FriendStatus = "active" | "blocked";

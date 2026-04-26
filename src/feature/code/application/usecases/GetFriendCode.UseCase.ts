@@ -1,3 +1,4 @@
+import { NotFoundError } from "../../../../core/errors/NotFoundError";
 import CodeRepository from "../../domain/Code.Repository";
 import FriendCode from "../../domain/entity/FriendCode";
 
@@ -10,7 +11,7 @@ export default class GetFriendCodeUseCase {
         const friendCode = await this.codeRepository.getCodeByUser(userId);
         
         if (!friendCode) {
-            throw new Error("Código de amistad no encontrado para el usuario");
+            throw new NotFoundError("Código de amistad no encontrado para el usuario");
         }
 
         return friendCode;

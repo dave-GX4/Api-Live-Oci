@@ -4,8 +4,8 @@ import { getController, searchController } from "../Code.Dependences";
 const routerCode = Router()
 
 routerCode.get(
-    "/stream/:id", 
-    (req: Request, res: Response) => getController.streamCode(req, res)
+    "/get/:id", 
+    (req: Request, res: Response) => getController.run(req, res)
 );
 
 routerCode.post(
