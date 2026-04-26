@@ -11,7 +11,9 @@ import { env } from './src/core/config/env.config';
 import routerCloudinary from './src/feature/cloudinary/infrastructure/router/Cloudinary.Routes';
 import { codeExpirationCron } from './src/feature/code/infrastructure/Code.Dependences';
 import routerCode from './src/feature/code/infrastructure/router/Code.Routes';
-import routerFriendRequest from './src/feature/friendrequest/infrastructure/router/FriendRequest.Routes';
+import routerFriend from './src/feature/friend/infrastructure/router/Friend.Routes';
+import routerGlobalSse from './src/feature/sse/router/SSE.Routes';
+import routerNotification from './src/feature/notifications/infrastructure/router/Notification.Routes';
 
 const app = express();
 
@@ -27,14 +29,16 @@ app.use(express.json());
 
 app.use(`${routeGlobal}auth`, routerAuth);
 app.use(`${routeGlobal}user`, routerUser);
-app.use(`${routeGlobal}activities`, routerActivity);
-app.use(`${routeGlobal}schedules`, routerSchedule);
-app.use(`${routeGlobal}LR`, routerLeisureRecords);
-app.use(`${routeGlobal}gemini`, routerGemini);
-app.use(`${routeGlobal}bored`, routerBored);
-app.use(`${routeGlobal}cloudinary`, routerCloudinary);
 app.use(`${routeGlobal}code`, routerCode);
-app.use(`${routeGlobal}friends`, routerFriendRequest)
+app.use(`${routeGlobal}bored`, routerBored);
+app.use(`${routeGlobal}gemini`, routerGemini);
+app.use(`${routeGlobal}sse`, routerGlobalSse);
+app.use(`${routeGlobal}friends`, routerFriend);
+app.use(`${routeGlobal}LR`, routerLeisureRecords);
+app.use(`${routeGlobal}schedules`, routerSchedule);
+app.use(`${routeGlobal}activities`, routerActivity);
+app.use(`${routeGlobal}cloudinary`, routerCloudinary);
+app.use(`${routeGlobal}notification`, routerNotification);
 
 app.listen(env.server.port, () => {
     console.log(`[${env.server.nodeEnv}] Servidor corriendo en el puerto ${env.server.port}`);

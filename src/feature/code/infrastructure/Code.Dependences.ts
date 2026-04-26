@@ -3,7 +3,8 @@ import { env } from "../../../core/config/env.config";
 import CloudinaryImplService from "../../../core/services/implements/Cloudinary.Impl.Service";
 import CryptoCodeGenerator from "../../../core/services/implements/CryptoCode.Service";
 import CloudinaryMySQLPersistence from "../../cloudinary/infrastructure/db/Cloudinary.MySql.Persistence";
-import FriendRequestMySqlPersistence from "../../friendrequest/infrastructure/db/FriendReuqest.MySql.persistence";
+import FriendRequestMySqlPersistence from "../../friend/infrastructure/db/Friend.MySql.persistence";
+import GlobalSseManager from "../../sse/service/GlobalSseManager";
 import MySqlUserPersistence from "../../user/infrastructure/db/MySql.User.Persistence";
 import GetFriendCodeUseCase from "../application/usecases/GetFriendCode.UseCase";
 import RegenerateFriendCodeUseCase from "../application/usecases/RegenerateFriendCode.UseCase";
@@ -12,7 +13,7 @@ import GetCodeController from "./controllers/GetCode.Controller";
 import SearchUserByCodeController from "./controllers/SearchUserByCode.Controller";
 import { CodeExpirationCron } from "./cron/CodeExpiration.Cron";
 import CodeMySqlPersistence from "./db/Code.MySql.Persistence";
-import SseCodeConnectionManager from "./services/implements/SseCodeConnectionManager";
+
 
 const codeMySqlPersistence = new CodeMySqlPersistence(pool);
 const userMySqlPersistence = new MySqlUserPersistence(pool);
@@ -20,7 +21,7 @@ const cloudinaryMySQLPersistence = new CloudinaryMySQLPersistence(pool);
 const friendrequestMySqlPersistence = new FriendRequestMySqlPersistence(pool)
 
 const cryptoCodeService = new CryptoCodeGenerator();
-const sseConnectionManager = new SseCodeConnectionManager();
+const sseConnectionManager = new GlobalSseManager();
 const cloudinaryService = new CloudinaryImplService(
     env.cloudinary.name,
     env.cloudinary.apiKey,
@@ -45,8 +46,7 @@ const searchUseCase = new SearchUserByCodeUseCase(
 );
 
 export const getController = new GetCodeController(
-    getUseCase,
-    sseConnectionManager
+    getUseCase
 )
 export const codeExpirationCron = new CodeExpirationCron(
     regenerateUseCase,
