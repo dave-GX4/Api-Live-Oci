@@ -11,19 +11,18 @@ export default class RemoveFriendController {
 
     async run(req: Request, res: Response): Promise<Response> {
         try {
-            const friendshipId = req.params.friendshipId as string;
-            
-            const requestUserId = req.body?.userId || req.query?.userId;
+            const { id } = req.params;
+            const {userId} = req.body
 
-            if (!friendshipId) {
+            if (!id) {
                 throw new InvalidError('El ID de la amistad (friendshipId) es requerido en la ruta');
             }
 
-            if (!requestUserId || typeof requestUserId !== 'string') {
+            if (!userId || typeof userId !== 'string') {
                 throw new InvalidError('El ID del usuario que realiza la acción (userId) es requerido');
             }
 
-            const response = await this.useCase.run(friendshipId, requestUserId);
+            const response = await this.useCase.run(id as string, userId);
 
             return res.status(200).json(response);
 
