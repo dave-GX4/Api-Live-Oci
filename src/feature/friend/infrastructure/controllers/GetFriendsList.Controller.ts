@@ -10,13 +10,13 @@ export default class GetFriendsListController {
 
     async run(req: Request, res: Response): Promise<Response> {
         try {
-            const userId = req.params.userId as string;
+            const id = req.params.userId as string;
 
-            if (!userId) {
+            if (!id) {
                 throw new InvalidError('El ID del usuario es requerido en la ruta');
             }
 
-            const friends = await this.useCase.run(userId);
+            const friends = await this.useCase.run(id);
 
             return res.status(200).json(friends);
 
