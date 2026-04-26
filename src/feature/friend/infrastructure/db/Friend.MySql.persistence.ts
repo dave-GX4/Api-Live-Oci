@@ -1,6 +1,6 @@
 import { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import FriendRepository from "../../domain/Fiend.Repository";
-import FriendRequest from "../../domain/entity/FriendRequest";
+import Friend from "../../domain/entity/Friend";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
 import { RequestStatus } from "../../domain/entity/enums/Request.Status";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
@@ -9,7 +9,7 @@ import UUID from "../../../../core/valueobjects/UUID";
 export default class FriendMySqlPersistence implements FriendRepository {
     constructor(private readonly pool: Pool) {}
 
-    async save(request: FriendRequest): Promise<void> {
+    async save(request: Friend): Promise<void> {
         try {
             const query = `
                 INSERT INTO friendRequests (id, requesterId, addresseeId, status)
@@ -36,11 +36,11 @@ export default class FriendMySqlPersistence implements FriendRepository {
         }
     }
     
-    async findBetweenUsers(userA: string, userB: string): Promise<FriendRequest | null> {
+    async findBetweenUsers(userA: string, userB: string): Promise<Friend | null> {
         try {
             const query = `
                 SELECT id, requesterId, addresseeId, status, createdAt, updatedAt 
-                FROM friendRequests 
+                FROM friend
                 WHERE (requesterId = ? AND addresseeId = ?) 
                 OR (requesterId = ? AND addresseeId = ?)
                 LIMIT 1
@@ -67,11 +67,11 @@ export default class FriendMySqlPersistence implements FriendRepository {
         }
     }
 
-    async findById(id: string): Promise<FriendRequest | null> {
+    async findById(id: string): Promise<Friend | null> {
         try {
             const query = `
                 SELECT id, requesterId, addresseeId, status, createdAt, updatedAt 
-                FROM friendRequests 
+                FROM friend
                 WHERE id = ?
                 LIMIT 1
             `;
@@ -94,11 +94,11 @@ export default class FriendMySqlPersistence implements FriendRepository {
         }
     }
 
-    async findPendingByUserId(userId: string): Promise<FriendRequest[]> {
+    async findPendingByUserId(userId: string): Promise<Friend[]> {
         try {
             const query = `
                 SELECT id, requesterId, addresseeId, status, createdAt, updatedAt 
-                FROM friendRequests 
+                FROM friend 
                 WHERE addresseeId = ? AND status = 'pending'
                 ORDER BY createdAt DESC
             `;
@@ -125,10 +125,38 @@ export default class FriendMySqlPersistence implements FriendRepository {
         }
     }
 
+    async findAllFriendsByUserId(userId: string): Promise<Friend[]> {
+        try {
+            const query = `
+                SELECT id, requesterId, addresseeId, status, createdAt, updatedAt 
+                FROM friends 
+                WHERE (requesterId = ? OR addresseeId = ?) 
+                AND status = 'accepted'
+                ORDER BY updatedAt DESC
+            `;
+            
+            const [rows] = await this.pool.execute<RowDataPacket[]>(query, [userId, userId]);
+            
+            if (rows.length === 0) return [];
+
+            return rows.map(row => ({
+                id: row.id,
+                requesterId: UUID.fromDatabase(row.requesterId),
+                addresseeId: UUID.fromDatabase(row.addresseeId),
+                status: row.status,
+                createdAt: row.createdAt,
+                updatedAt: row.updatedAt
+            }));
+            
+        } catch (error) {
+            throw new DatabaseOperationError(error);
+        }
+    }
+
     async update(id: string, status: RequestStatus): Promise<void> {
         try {
             const query = `
-                UPDATE friendRequests 
+                UPDATE friend 
                 SET status = ?
                 WHERE id = ?
             `;
@@ -142,7 +170,7 @@ export default class FriendMySqlPersistence implements FriendRepository {
 
     async delete(id: string): Promise<void> {
         try {
-            const query = `DELETE FROM friendRequests WHERE id = ?`;
+            const query = `DELETE FROM friend WHERE id = ?`;
             const [result] = await this.pool.execute<ResultSetHeader>(query, [id]);
             
             if (result.affectedRows === 0) {

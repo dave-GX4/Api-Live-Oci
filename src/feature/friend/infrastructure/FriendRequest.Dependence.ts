@@ -8,11 +8,15 @@ import GlobalSseManager from "../../sse/service/GlobalSseManager";
 import MySqlUserPersistence from "../../user/infrastructure/db/MySql.User.Persistence";
 import CancelFriendRequestUseCase from "../application/usecases/CancelFriendRequest.UseCase";
 import FriendRequestUpdateUseCase from "../application/usecases/FriendRequestUpdate.UseCase";
+import GetFriendsListUseCase from "../application/usecases/GetFriendsList.UseCase";
 import GetPendingFriendRequestsUseCase from "../application/usecases/GetPendingFriendRequests.UseCase";
+import RemoveFriendUseCase from "../application/usecases/RemoveFriend.UseCase";
 import SendFriendRequestUseCase from "../application/usecases/SendFriendRequest.UseCase";
 import CancelFriendRequestController from "./controllers/CancelFriendRequest.Controller";
 import FriendRequestUpdateController from "./controllers/FriendRequestUpdate.Controller";
+import GetFriendsListController from "./controllers/GetFriendsList.Controller";
 import GetPendingFriendRequestsController from "./controllers/GetPendingFriendRequests.Controller";
+import RemoveFriendController from "./controllers/RemoveFriend.Controller";
 import SendFriendRequestController from "./controllers/SendFriendRequest.Controller";
 import StreamFriendRequestController from "./controllers/StreamFriendRequest.Controller";
 import FriendMySqlPersistence from "./db/Friend.MySql.persistence";
@@ -41,9 +45,28 @@ const sendFriendRequestUseCase = new SendFriendRequestUseCase(
     cloudinaryService,
     friendNotifierSse
 );
-const friendRequestUpdateUseCase = new FriendRequestUpdateUseCase(mySqlPersistenceFriend);
+const friendRequestUpdateUseCase = new FriendRequestUpdateUseCase(
+    mySqlPersistenceFriend,
+    mySqlPersistenceNotification,
+    mySqlPersistenceUser,
+    mySqlPersistenceCloudinary,
+    cloudinaryService,
+    uuidService,
+    friendNotifierSse
+);
 const cancelFriendRequestUseCase = new CancelFriendRequestUseCase(mySqlPersistenceFriend);
 const getPendingFriendRequestsUseCase = new GetPendingFriendRequestsUseCase(
+    mySqlPersistenceFriend,
+    mySqlPersistenceUser,
+    mySqlPersistenceCloudinary,
+    cloudinaryService
+);
+const removeFriendUseCase = new RemoveFriendUseCase(
+    mySqlPersistenceFriend,
+    friendNotifierSse
+);
+
+const getFriendsListUseCase = new GetFriendsListUseCase(
     mySqlPersistenceFriend,
     mySqlPersistenceUser,
     mySqlPersistenceCloudinary,
@@ -55,3 +78,5 @@ export const friendRequestUpdateController = new FriendRequestUpdateController(f
 export const cancelFriendRequestController = new CancelFriendRequestController(cancelFriendRequestUseCase);
 export const getPendingFriendRequestsController = new GetPendingFriendRequestsController(getPendingFriendRequestsUseCase);
 export const streamFriendRequestController = new StreamFriendRequestController(friendNotifierSse);
+export const removeFriendController = new GetFriendsListController(getFriendsListUseCase);
+export const getFriendsListController = new RemoveFriendController(removeFriendUseCase);

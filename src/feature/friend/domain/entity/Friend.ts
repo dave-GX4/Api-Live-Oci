@@ -1,7 +1,7 @@
 import UUID from "../../../../core/valueobjects/UUID";
 import { RequestStatus } from "./enums/Request.Status";
 
-export default interface FriendRequest {
+export default interface Friend {
   id: string
   requesterId: UUID;
   addresseeId: UUID;
