@@ -64,7 +64,6 @@ const removeFriendUseCase = new RemoveFriendUseCase(
     mySqlPersistenceFriend,
     friendNotifierSse
 );
-
 const getFriendsListUseCase = new GetFriendsListUseCase(
     mySqlPersistenceFriend,
     mySqlPersistenceUser,
@@ -76,5 +75,5 @@ export const sendFriendRequestController = new SendFriendRequestController(sendF
 export const friendRequestUpdateController = new FriendRequestUpdateController(friendRequestUpdateUseCase);
 export const cancelFriendRequestController = new CancelFriendRequestController(cancelFriendRequestUseCase);
 export const getPendingFriendRequestsController = new GetPendingFriendRequestsController(getPendingFriendRequestsUseCase);
-export const removeFriendController = new GetFriendsListController(getFriendsListUseCase);
-export const getFriendsListController = new RemoveFriendController(removeFriendUseCase);
+export const getFriendsListController = new GetFriendsListController(getFriendsListUseCase);
+export const removeFriendController = new RemoveFriendController(removeFriendUseCase);
