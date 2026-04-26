@@ -21,8 +21,10 @@ export default class SearchUserByCodeController{
             if (!code || typeof code !== 'string') {
                 throw new InvalidError('El código es requerido en el body');
             }
+            
+            const cleanCode = code.replace(/\s+/g, '').toUpperCase();
 
-            const result = await this.useCase.run(id, code);
+            const result = await this.useCase.run(id, cleanCode);
 
             return res.status(200).json(result);
         } catch (error) {
