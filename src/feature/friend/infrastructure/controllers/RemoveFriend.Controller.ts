@@ -13,7 +13,7 @@ export default class RemoveFriendController {
         try {
             const friendshipId = req.params.friendshipId as string;
             
-            const requestUserId = req.body.userId || req.query.userId; 
+            const requestUserId = req.body?.userId || req.query?.userId;
 
             if (!friendshipId) {
                 throw new InvalidError('El ID de la amistad (friendshipId) es requerido en la ruta');
