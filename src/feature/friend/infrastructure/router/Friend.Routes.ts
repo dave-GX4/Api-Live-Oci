@@ -31,12 +31,12 @@ routerFriend.get(
 );
 
 routerFriend.get(
-    '/get/all/:userId', 
+    '/all/:id', 
     (req: Request, res: Response) => getFriendsListController.run(req, res)
 );
 
 routerFriend.delete(
-    '/delete/:friendshipId', 
+    '/remove/:id', 
     (req: Request, res: Response) => removeFriendController.run(req, res)
 );
 
