@@ -12,7 +12,7 @@ export default class FriendMySqlPersistence implements FriendRepository {
     async save(request: Friend): Promise<void> {
         try {
             const query = `
-                INSERT INTO friendRequests (id, requesterId, addresseeId, status)
+                INSERT INTO friends (id, requesterId, addresseeId, status)
                 VALUES (?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE
                     id = VALUES(id),
@@ -40,7 +40,7 @@ export default class FriendMySqlPersistence implements FriendRepository {
         try {
             const query = `
                 SELECT id, requesterId, addresseeId, status, createdAt, updatedAt 
-                FROM friend
+                FROM friends
                 WHERE (requesterId = ? AND addresseeId = ?) 
                 OR (requesterId = ? AND addresseeId = ?)
                 LIMIT 1
@@ -71,7 +71,7 @@ export default class FriendMySqlPersistence implements FriendRepository {
         try {
             const query = `
                 SELECT id, requesterId, addresseeId, status, createdAt, updatedAt 
-                FROM friend
+                FROM friends
                 WHERE id = ?
                 LIMIT 1
             `;
@@ -98,7 +98,7 @@ export default class FriendMySqlPersistence implements FriendRepository {
         try {
             const query = `
                 SELECT id, requesterId, addresseeId, status, createdAt, updatedAt 
-                FROM friend 
+                FROM friends 
                 WHERE addresseeId = ? AND status = 'pending'
                 ORDER BY createdAt DESC
             `;
@@ -156,7 +156,7 @@ export default class FriendMySqlPersistence implements FriendRepository {
     async update(id: string, status: RequestStatus): Promise<void> {
         try {
             const query = `
-                UPDATE friend 
+                UPDATE friends 
                 SET status = ?
                 WHERE id = ?
             `;
