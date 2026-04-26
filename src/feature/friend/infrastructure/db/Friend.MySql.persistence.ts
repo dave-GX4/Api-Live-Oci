@@ -170,7 +170,7 @@ export default class FriendMySqlPersistence implements FriendRepository {
 
     async delete(id: string): Promise<void> {
         try {
-            const query = `DELETE FROM friend WHERE id = ?`;
+            const query = `DELETE FROM friends WHERE id = ?`;
             const [result] = await this.pool.execute<ResultSetHeader>(query, [id]);
             
             if (result.affectedRows === 0) {
