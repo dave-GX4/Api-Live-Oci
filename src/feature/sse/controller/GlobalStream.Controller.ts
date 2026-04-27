@@ -29,7 +29,6 @@ export default class GlobalSseManager implements IGlobalConnectionManager, Frien
         }
     }
 
-    // IMPLEMENTACIÓN DE CÓDIGOS
     notifyCodeUpdated(userId: string, payload: any): void {
         const userClients = this.clients.get(userId);
         if (userClients) {
@@ -40,7 +39,6 @@ export default class GlobalSseManager implements IGlobalConnectionManager, Frien
         }
     }
 
-    // SOLICITUDES DE AMISTAD
     notifyNewRequest(userId: string, payload: Notification): void {
         const userClients = this.clients.get(userId);
         if (userClients) {
@@ -51,7 +49,6 @@ export default class GlobalSseManager implements IGlobalConnectionManager, Frien
         }
     }
 
-    // AÑADIR O ELIMINAR AMIGO
     notifyFriendAdded(userId: string, payload: any): void {
         const userClients = this.clients.get(userId);
         if (userClients) {
