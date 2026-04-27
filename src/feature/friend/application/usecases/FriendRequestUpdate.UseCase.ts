@@ -82,7 +82,7 @@ export default class FriendRequestUpdateUseCase {
                         friendName: bProfile?.name || 'Alguien',
                         friendAvatarUrl: bAvatarUrl
                     },
-                    read: false,
+                    isRead: false,
                     channel: "ws"
                 };
 

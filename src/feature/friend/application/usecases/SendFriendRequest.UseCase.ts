@@ -105,7 +105,7 @@ export default class SendFriendRequestUseCase {
                     requesterName: senderProfile?.name || 'Alguien',
                     requesterAvatarUrl: avatarUrl
                 },
-                read: false,
+                isRead: false,
                 channel: "ws"
             };
 
