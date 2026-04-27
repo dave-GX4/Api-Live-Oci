@@ -31,7 +31,7 @@ export default class GlobalStreamController {
             req.on('close', () => {
                 console.log(`[Global SSE] Cliente desconectado: ${id}`);
                 clearInterval(heartbeatInterval); 
-                this.sseManager.removeClient(id, res);
+                this.sseManager.removeClient(id);
             });
 
         } catch (error) {
