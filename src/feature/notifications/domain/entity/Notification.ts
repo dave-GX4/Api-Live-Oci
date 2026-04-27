@@ -8,7 +8,7 @@ export default interface Notification {
     title: string;
     body: string;
     data?: Record<string, any>;
-    read: boolean;
+    isRead: boolean;
     channel: NotificationChannel;
     createdAt?: Date;
 }

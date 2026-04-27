@@ -29,7 +29,7 @@ export default class NotificationMySqlPersistence implements NotificationReposit
                 notification.title,
                 notification.body,
                 dataJson,
-                notification.read,
+                notification.isRead,
                 notification.channel,
                 notification.createdAt || null
             ]);
@@ -66,7 +66,7 @@ export default class NotificationMySqlPersistence implements NotificationReposit
                     title: row.title,
                     body: row.body,
                     data: parsedData,
-                    read: row.isRead === true,
+                    isRead: row.isRead === 1 || row.isRead === true,
                     channel: row.channel as NotificationChannel,
                     createdAt: row.createdAt
                 };
