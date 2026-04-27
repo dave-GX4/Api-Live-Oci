@@ -53,18 +53,22 @@ export default class FriendRequestUpdateUseCase {
         // SI ACEPTÓ, le avisamos al Usuario A (el que envió la solicitud original)
         if (normalizedStatus === 'accepted') {
             try {
-                const requesterId = request.requesterId.getValue();
-                const addresseeId = request.addresseeId.getValue();
+                const requesterId = request.requesterId.getValue(); // A
+                const addresseeId = request.addresseeId.getValue(); // B
 
-                // Buscamos los datos de B para mostrárselos a A
+                // 1. Buscamos los datos de B (Para enviárselos a A)
                 const bProfile = await this.userRepository.getPublicProfile(addresseeId);
                 let bAvatarUrl: string | undefined;
                 const bPhoto = await this.cloudinaryRepository.findByUserId(addresseeId);
-                if (bPhoto) {
-                    bAvatarUrl = await this.cloudinaryService.getUrl(bPhoto.publicId);
-                }
+                if (bPhoto) bAvatarUrl = await this.cloudinaryService.getUrl(bPhoto.publicId);
 
-                // Creamos la Notificación Visual para la campanita de A
+                // 2. Buscamos los datos de A (Para enviárselos a B)
+                const aProfile = await this.userRepository.getPublicProfile(requesterId);
+                let aAvatarUrl: string | undefined;
+                const aPhoto = await this.cloudinaryRepository.findByUserId(requesterId);
+                if (aPhoto) aAvatarUrl = await this.cloudinaryService.getUrl(aPhoto.publicId);
+
+                // NOTIFICACIONES PARA "A" (El que envió)
                 const notificationId = await this.uuidService.generate();
                 const notification: Notification = {
                     id: notificationId,
@@ -83,17 +87,24 @@ export default class FriendRequestUpdateUseCase {
                 };
 
                 await this.notificationRepository.saveNotification(notification);
+                this.sseNotifier.notifyNewRequest(requesterId, notification); // Campanita para A
 
-                // Disparamos el SSE de Notificación (Campanita)
-                this.sseNotifier.notifyNewRequest(requesterId, notification);
-
-                // Disparamos el SSE de Lista de Amigos (Para que se agregue a la pantalla de A en tiempo real)
+                // SSE de Lista de Amigos para A
                 this.sseNotifier.notifyFriendAdded(requesterId, {
                     action: 'ADDED',
                     friendshipId: requestId,
                     friendId: addresseeId,
                     friendName: bProfile?.name || 'Alguien',
                     friendAvatarUrl: bAvatarUrl
+                });
+
+                // SSE de Lista de Amigos para B
+                this.sseNotifier.notifyFriendAdded(addresseeId, {
+                    action: 'ADDED',
+                    friendshipId: requestId,
+                    friendId: requesterId,
+                    friendName: aProfile?.name || 'Alguien',
+                    friendAvatarUrl: aAvatarUrl
                 });
 
             } catch (error) {

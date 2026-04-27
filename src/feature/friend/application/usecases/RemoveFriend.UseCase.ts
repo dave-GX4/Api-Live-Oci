@@ -32,17 +32,20 @@ export default class RemoveFriendUseCase {
         // Borramos de la base de datos
         await this.friendRepository.delete(friendshipId);
 
-        // ¡Avisamos por SSE al otro usuario para que se le borre de la pantalla!
         try {
-            // Identificamos quién es el "otro"
-            const otherUserId = requestUserId === requesterId ? addresseeId : requesterId;
-            
-            // Reutilizamos el evento que ya tenías en GlobalSseManager para borrar/añadir
-            this.sseNotifier.notifyFriendAdded(otherUserId, {
+            const requesterId = friendship.requesterId.getValue();
+            const addresseeId = friendship.addresseeId.getValue();
+
+            const payload = {
                 action: 'REMOVED',
                 friendshipId: friendshipId,
                 removedUserId: requestUserId
-            });
+            };
+
+            // Le avisamos a los dos, sin importar quién la borró
+            this.sseNotifier.notifyFriendAdded(requesterId, payload);
+            this.sseNotifier.notifyFriendAdded(addresseeId, payload);
+
         } catch (error) {
             console.error("[RemoveFriend] Error notificando por SSE:", error);
         }

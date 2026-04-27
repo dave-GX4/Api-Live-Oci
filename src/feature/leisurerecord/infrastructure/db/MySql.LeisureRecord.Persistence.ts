@@ -4,6 +4,7 @@ import LeisureRecord from "../../domain/entitie/LeisureRecord";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
 import UUID from "../../../../core/valueobjects/UUID";
 import { NotFoundError } from "../../../../core/errors/NotFoundError";
+import RawLeisureWithActivity from "../../domain/entitie/RawLeisureWithActivity";
 
 export default class MySqlLeisureRecordPersistence implements LeisureRecordRepository{
     constructor(
@@ -37,31 +38,6 @@ export default class MySqlLeisureRecordPersistence implements LeisureRecordRepos
         }
     }
 
-    async getAllByUser(id: string): Promise<LeisureRecord[]> {
-        const query = "SELECT * FROM leisureRecords WHERE uuidUser = ?";
-        const values = [id]
-
-        try {
-            const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
-
-            return rows.map(row => ({
-                uuid: UUID.fromDatabase(row.uuid),
-                uuidUser: UUID.fromDatabase(row.uuid_user),
-                uuidActivity: UUID.fromDatabase(row.uuidActivity),
-                scheduleDate: row.scheduleDate,
-                startTime: row.startTime,
-                endTime: row.endTime,
-                durationMinutes: row.durationMinutes,
-                satisfaction: row.saticfaction,
-                status: row.status
-            }));
-
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Error desconocido';
-            throw new DatabaseOperationError(`Error al obtener la lista de actividades: ${message}`);
-        }
-    }
-
     async getById(id: string): Promise<LeisureRecord | null> {
         const query = "SELECT * FROM leisureRecords WHERE uuid = ?";
         const values = [id];
@@ -90,6 +66,60 @@ export default class MySqlLeisureRecordPersistence implements LeisureRecordRepos
         } catch (error) {
             const message = error instanceof Error ? error.message : 'Error desconocido';
             throw new DatabaseOperationError(`Error al buscar la actividad: ${message}`);
+        }
+    }
+
+    async getAllWithActivityByUser(uuidUser: string): Promise<RawLeisureWithActivity[]> {
+        const query = `
+            SELECT 
+                lr.uuid AS leisureUuid,
+                lr.scheduleDate,
+                lr.startTime,
+                lr.endTime,
+                lr.durationMinutes,
+                lr.satisfaction,
+                lr.status,
+                a.uuid AS activityUuid,
+                a.name AS activityName,
+                a.description AS activityDescription,
+                a.type AS activityType,
+                a.category AS activityCategory,
+                a.durationMinutes AS activityEstimatedDuration,
+                a.socialType
+            FROM leisureRecords lr
+            INNER JOIN activities a ON lr.uuidActivity = a.uuid
+            WHERE lr.uuidUser = ?
+        `;
+        const values = [uuidUser];
+
+        try {
+            const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
+
+            if (!rows || rows.length === 0) {
+                return [];
+            }
+
+            return rows.map(row => ({
+                leisureUuid: UUID.fromDatabase(row.leisureUuid),
+                scheduleDate: row.scheduleDate,
+                startTime: row.startTime,
+                endTime: row.endTime,
+                durationMinutes: row.durationMinutes,
+                satisfaction: row.satisfaction,
+                status: row.status,
+                
+                activityUuid: UUID.fromDatabase(row.activityUuid),
+                activityName: row.activityName,
+                activityDescription: row.activityDescription,
+                activityType: row.activityType,
+                activityCategory: row.activityCategory,
+                activityEstimatedDuration: row.activityEstimatedDuration,
+                socialType: row.socialType
+            }));
+
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Error desconocido';
+            throw new DatabaseOperationError(`Error al obtener los registros de ocio y actividades: ${message}`);
         }
     }
     

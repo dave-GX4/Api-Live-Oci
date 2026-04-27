@@ -43,30 +43,6 @@ export default class MySqlActivityPersistence implements ActivitiesRepository{
         }
     }
 
-    async getAllActivitiesByUser(idUser: string): Promise<Activity[]> {
-        const query = "SELECT * FROM activities WHERE uuidUser = ?";
-        const values = [idUser]
-
-        try {
-            const [rows] = await this.pool.execute<RowDataPacket[]>(query, values);
-
-            return rows.map(row => ({
-                uuid: UUID.fromDatabase(row.uuid),
-                uuidUser: UUID.fromDatabase(row.uuidUser),
-                name: row.name,
-                description: row.description,
-                type: row.type,
-                category: row.category,
-                durationMinutes: row.durationMinutes,
-                socialType: row.socialType
-            }));
-
-        } catch (error) {
-            const message = error instanceof Error ? error.message : 'Error desconocido';
-            throw new DatabaseOperationError(`Error al obtener la lista de actividades: ${message}`);
-        }
-    }
-
     async getByIdActivity(id: string): Promise<Activity | null> {
         const query = "SELECT * FROM activities WHERE uuid = ?";
         const values = [id];

@@ -1,16 +1,11 @@
 import { Request, Response, Router } from "express";
-import { createController, deleteController, getAllController } from "../Dependences";
+import { createController, deleteController} from "../Activity.Dependences";
 
 const routerActivity = Router();
 
 routerActivity.post(
     "/newActivity/:id",
     (req: Request, res: Response) => createController.run(req, res)
-);
-
-routerActivity.get(
-    "/AllActivities/:id",
-    (req: Request, res: Response) => getAllController.run(req, res)
 );
 
 routerActivity.delete(
