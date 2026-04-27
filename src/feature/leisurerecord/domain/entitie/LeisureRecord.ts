@@ -10,4 +10,5 @@ export default interface LeisureRecord{
     durationMinutes: number
     satisfaction: number
     status: string
+    createAt?: Date
 }

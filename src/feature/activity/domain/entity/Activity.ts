@@ -4,6 +4,7 @@ export default interface Activity{
     uuid: UUID
     uuidUser: UUID 
     name: string
+    imageUrl?: string
     description: string
     type: string
     category: string

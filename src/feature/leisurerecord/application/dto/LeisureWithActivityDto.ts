@@ -6,8 +6,11 @@ export interface LeisureWithActivityDto {
     durationMinutes: number;
     satisfaction: number;
     status: string;
+    createdAt: Date
+    
     activityUuid: string;
     activityName: string;
+    activityImageUrl: string;
     activityDescription: string;
     activityType: string;
     activityCategory: string;

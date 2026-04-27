@@ -7,7 +7,7 @@ export default class GetAllLeisureWithActivitiesUseCase {
         private readonly leisureRepository: LeisureRecordRepository
     ) {}
 
-    async run(id: string): Promise<LeisureWithActivityDto[]> {
+    async run(id: string): Promise<LeisureWithActivityDto[]> { 
         const idUser = UUID.validate(id);
         
         const rawResults = await this.leisureRepository.getAllWithActivityByUser(idUser.getValue());
@@ -20,8 +20,11 @@ export default class GetAllLeisureWithActivitiesUseCase {
             durationMinutes: row.durationMinutes,
             satisfaction: row.satisfaction,
             status: row.status,
+            createdAt: row.createdAt,
+            
             activityUuid: row.activityUuid.getValue(),
             activityName: row.activityName,
+            activityImageUrl: row.activityImageUrl,
             activityDescription: row.activityDescription,
             activityType: row.activityType,
             activityCategory: row.activityCategory,
