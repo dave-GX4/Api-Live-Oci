@@ -21,10 +21,7 @@ export default class GetNotificationsController {
 
             const notifications = await this.useCase.run(userId, isNaN(limit) ? 20 : limit);
 
-            return res.status(200).json({
-                success: true,
-                data: notifications
-            });
+            return res.status(200).json(notifications);
 
         } catch (error) {
             if (error instanceof InvalidError) {
