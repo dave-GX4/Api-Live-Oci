@@ -13,7 +13,7 @@ export default class GlobalSseManager implements IGlobalConnectionManager, Frien
         }
         
         this.clients.get(userId)!.add(res);
-        console.log(`[Global SSE] Cliente conectado. Usuario: ${userId}. Conexiones activas: ${this.clients.get(userId)!.size}`);
+        console.log(`[Global SSE] Cliente conectado. Usuario: ${userId}. Conexiones activas : ${this.clients.get(userId)!.size}`);
     }
 
     removeClient(userId: string, res: Response): void {
@@ -21,7 +21,7 @@ export default class GlobalSseManager implements IGlobalConnectionManager, Frien
         
         if (userClients) {
             userClients.delete(res);
-            console.log(`[Global SSE] Cliente desconectado. Usuario: ${userId}. Conexiones restantes: ${userClients.size}`);
+            console.log(`[Global SSE] Cliente desconectado. Usuario: ${userId}. Conexiones restantes : ${userClients.size}`);
             
             if (userClients.size === 0) {
                 this.clients.delete(userId);
