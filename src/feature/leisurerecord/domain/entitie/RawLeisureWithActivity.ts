@@ -8,8 +8,11 @@ export default interface RawLeisureWithActivity {
     durationMinutes: number;
     satisfaction: number;
     status: string;
+    createdAt: Date;
+    
     activityUuid: UUID;
     activityName: string;
+    activityImageUrl: string;
     activityDescription: string;
     activityType: string;
     activityCategory: string;
