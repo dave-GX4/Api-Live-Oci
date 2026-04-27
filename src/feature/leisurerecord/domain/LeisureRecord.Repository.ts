@@ -1,10 +1,10 @@
 import LeisureRecord from "./entitie/LeisureRecord"
+import RawLeisureWithActivity from "./entitie/RawLeisureWithActivity";
 
 export default interface LeisureRecordRepository{
     addActivity(leisureRecord: LeisureRecord): Promise<void>
-    getAllByUser(id:string): Promise<LeisureRecord[]>
     getById(id: string): Promise<LeisureRecord | null>
-    deleteActivityComplete(id: string): Promise<void>
+    getAllWithActivityByUser(uuidUser: string): Promise<RawLeisureWithActivity[]>;
     updateLeisureRecord(
         id: string,
         updates: Partial<{

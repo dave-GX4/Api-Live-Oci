@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
 import InvalidError from "../../../../core/errors/InvalidError";
 import { DatabaseOperationError } from "../../../../core/errors/DatabaseOperationError";
-import GetAllLeisureRecordByUserUseCase from "../../application/usescases/GetAllLeisureRecordByUser.UseCase";
+import GetAllLeisureWithActivitiesUseCase from "../../application/usescases/GetAllLeisureWithActivities.UseCase";
 
-export default class GetAllLeisureRecordByUserController {
+export default class GetAllLeisureWithActivitiesController {
     constructor(
-        private readonly getAllUseCase: GetAllLeisureRecordByUserUseCase
+        private readonly getAllUseCase: GetAllLeisureWithActivitiesUseCase
     ) { }
 
     async run(req: Request, res: Response): Promise<Response> {
         try {
             const { id } = req.params;
             if (!id) {
-                throw new InvalidError("No se encontro ningun identificador");
+                throw new InvalidError("No se encontró ningún identificador");
             }
 
             const response = await this.getAllUseCase.run(id as string);
@@ -21,7 +21,7 @@ export default class GetAllLeisureRecordByUserController {
         } catch (error) {
             if (error instanceof InvalidError) {
                 return res.status(400).json(
-                    { message: "Error de validacion: " + error.message }
+                    { message: "Error de validación: " + error.message }
                 )
             }
 
